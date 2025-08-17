@@ -7,6 +7,17 @@ if (!fs.existsSync(distDir)) {
     fs.mkdirSync(distDir);
 }
 
+// Helper function to escape HTML
+function escapeHtml(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // Custom CSV parser that handles quoted fields with colons properly
 function parseCSVLine(line) {
     const result = [];
@@ -270,6 +281,14 @@ async function build() {
         const html = generateHTML(allBooks, categories, languages, locations, types);
         fs.writeFileSync(path.join(distDir, 'index.html'), html);
         
+        // Create the author index page
+        const authorsHtml = generateAuthorsHTML(allBooks);
+        fs.writeFileSync(path.join(distDir, 'authors.html'), authorsHtml);
+        
+        // Create the category index page
+        const categoriesHtml = generateCategoriesHTML(allBooks);
+        fs.writeFileSync(path.join(distDir, 'categories.html'), categoriesHtml);
+        
         // Create the JavaScript file
         const js = generateJavaScript(allBooks);
         fs.writeFileSync(path.join(distDir, 'script.js'), js);
@@ -305,6 +324,11 @@ function generateHTML(books, categories, languages, locations, types) {
         <div class="container">
             <h1>📚 Book Shelf</h1>
             <p>Your Personal Library Collection</p>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link active">All Books</a>
+                <a href="authors.html" class="nav-link">Authors</a>
+                <a href="categories.html" class="nav-link">Categories</a>
+            </nav>
         </div>
     </header>
     
@@ -373,6 +397,274 @@ function generateHTML(books, categories, languages, locations, types) {
     </footer>
     
     <script src="script.js"></script>
+</body>
+</html>`;
+}
+
+// Generate the authors index HTML
+function generateAuthorsHTML(books) {
+    // Group books by author
+    const authorGroups = {};
+    books.forEach(book => {
+        const author = book.author || 'Unknown Author';
+        if (!authorGroups[author]) {
+            authorGroups[author] = [];
+        }
+        authorGroups[author].push(book);
+    });
+    
+    // Sort authors alphabetically
+    const sortedAuthors = Object.keys(authorGroups).sort();
+    
+    const authorsList = sortedAuthors.map(author => {
+        const count = authorGroups[author].length;
+        return `<div class="index-item" onclick="filterByAuthor('${author.replace(/'/g, "\\'")}')">
+            <h3>${escapeHtml(author)}</h3>
+            <div class="count">${count} book${count !== 1 ? 's' : ''}</div>
+        </div>`;
+    }).join('');
+    
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authors - Book Shelf</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Book Shelf</h1>
+            <p>Browse Books by Author</p>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">All Books</a>
+                <a href="authors.html" class="nav-link active">Authors</a>
+                <a href="categories.html" class="nav-link">Categories</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="index-section">
+            <h2>Authors (${sortedAuthors.length})</h2>
+            <div class="index-grid">
+                ${authorsList}
+            </div>
+        </div>
+        
+        <div class="books-grid" id="booksGrid" style="display: none;">
+            <!-- Filtered books will appear here -->
+        </div>
+        
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>No books found for this author.</p>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Book Shelf. Built with ❤️ for book lovers.</p>
+        </div>
+    </footer>
+    
+    <script>
+        const allBooks = ${JSON.stringify(books)};
+        
+        function filterByAuthor(author) {
+            const filtered = allBooks.filter(book => book.author === author);
+            displayFilteredBooks(filtered, author);
+        }
+        
+        function displayFilteredBooks(books, author) {
+            const booksGrid = document.getElementById('booksGrid');
+            const noResults = document.getElementById('noResults');
+            const indexSection = document.querySelector('.index-section');
+            
+            if (books.length === 0) {
+                booksGrid.style.display = 'none';
+                noResults.style.display = 'block';
+                indexSection.style.display = 'none';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            indexSection.style.display = 'none';
+            booksGrid.style.display = 'grid';
+            
+            const booksHTML = books.map(book => \`
+                <div class="book-card">
+                    <div class="book-header">
+                        <span class="book-type">\${escapeHtml(book.type)}</span>
+                        <span class="book-location">\${escapeHtml(book.location)}</span>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">\${escapeHtml(book.title)}</h3>
+                        <p class="book-author">\${escapeHtml(book.author)}</p>
+                        <div class="book-meta">
+                            <span class="meta-item category">\${escapeHtml(book.category)}</span>
+                            <span class="meta-item language">\${escapeHtml(book.language)}</span>
+                        </div>
+                    </div>
+                </div>
+            \`).join('');
+            
+            booksGrid.innerHTML = booksHTML;
+            
+            // Add back button
+            const backBtn = \`<div style="margin-bottom: 2rem;"><button onclick="showAuthors()" style="padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">← Back to Authors</button></div>\`;
+            booksGrid.insertAdjacentHTML('beforebegin', backBtn);
+        }
+        
+        function showAuthors() {
+            document.querySelector('.index-section').style.display = 'block';
+            document.getElementById('booksGrid').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+            // Remove back button
+            const backBtn = document.querySelector('button[onclick="showAuthors()"]');
+            if (backBtn) backBtn.remove();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>`;
+}
+
+// Generate the categories index HTML
+function generateCategoriesHTML(books) {
+    // Group books by category
+    const categoryGroups = {};
+    books.forEach(book => {
+        const category = book.category || 'Unknown';
+        if (!categoryGroups[category]) {
+            categoryGroups[category] = [];
+        }
+        categoryGroups[category].push(book);
+    });
+    
+    // Sort categories alphabetically
+    const sortedCategories = Object.keys(categoryGroups).sort();
+    
+    const categoriesList = sortedCategories.map(category => {
+        const count = categoryGroups[category].length;
+        return `<div class="index-item" onclick="filterByCategory('${category.replace(/'/g, "\\'")}')">
+            <h3>${escapeHtml(category)}</h3>
+            <div class="count">${count} book${count !== 1 ? 's' : ''}</div>
+        </div>`;
+    }).join('');
+    
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Book Shelf</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Book Shelf</h1>
+            <p>Browse Books by Category</p>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">All Books</a>
+                <a href="authors.html" class="nav-link">Authors</a>
+                <a href="categories.html" class="nav-link active">Categories</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="index-section">
+            <h2>Categories (${sortedCategories.length})</h2>
+            <div class="index-grid">
+                ${categoriesList}
+            </div>
+        </div>
+        
+        <div class="books-grid" id="booksGrid" style="display: none;">
+            <!-- Filtered books will appear here -->
+        </div>
+        
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>No books found for this category.</p>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Book Shelf. Built with ❤️ for book lovers.</p>
+        </div>
+    </footer>
+    
+    <script>
+        const allBooks = ${JSON.stringify(books)};
+        
+        function filterByCategory(category) {
+            const filtered = allBooks.filter(book => book.category === category);
+            displayFilteredBooks(filtered, category);
+        }
+        
+        function displayFilteredBooks(books, category) {
+            const booksGrid = document.getElementById('booksGrid');
+            const noResults = document.getElementById('noResults');
+            const indexSection = document.querySelector('.index-section');
+            
+            if (books.length === 0) {
+                booksGrid.style.display = 'none';
+                noResults.style.display = 'block';
+                indexSection.style.display = 'none';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            indexSection.style.display = 'none';
+            booksGrid.style.display = 'grid';
+            
+            const booksHTML = books.map(book => \`
+                <div class="book-card">
+                    <div class="book-header">
+                        <span class="book-type">\${escapeHtml(book.type)}</span>
+                        <span class="book-location">\${escapeHtml(book.location)}</span>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">\${escapeHtml(book.title)}</h3>
+                        <p class="book-author">\${escapeHtml(book.author)}</p>
+                        <div class="book-meta">
+                            <span class="meta-item category">\${escapeHtml(book.category)}</span>
+                            <span class="meta-item language">\${escapeHtml(book.language)}</span>
+                        </div>
+                    </div>
+                </div>
+            \`).join('');
+            
+            booksGrid.innerHTML = booksHTML;
+            
+            // Add back button
+            const backBtn = \`<div style="margin-bottom: 2rem;"><button onclick="showCategories()" style="padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">← Back to Categories</button></div>\`;
+            booksGrid.insertAdjacentHTML('beforebegin', backBtn);
+        }
+        
+        function showCategories() {
+            document.querySelector('.index-section').style.display = 'block';
+            document.getElementById('booksGrid').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+            // Remove back button
+            const backBtn = document.querySelector('button[onclick="showCategories()"]');
+            if (backBtn) backBtn.remove();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
 </body>
 </html>`;
 }
@@ -529,6 +821,33 @@ header h1 {
 header p {
     font-size: 1.2rem;
     opacity: 0.9;
+}
+
+/* Navigation */
+.main-nav {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
 }
 
 /* Search Section */
@@ -750,6 +1069,56 @@ footer {
     margin-top: 3rem;
 }
 
+/* Index Pages */
+.index-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.index-section h2 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 0.5rem;
+}
+
+.index-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.index-item {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.index-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.index-item h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.index-item .count {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -778,6 +1147,15 @@ footer {
     }
     
     .stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .index-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-nav {
         flex-direction: column;
         gap: 0.5rem;
     }
