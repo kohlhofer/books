@@ -456,16 +456,17 @@ function displayBooks(books) {
     
     const booksHTML = books.map(book => \`
         <div class="book-card">
+            <div class="book-header">
+                <span class="book-type">\${escapeHtml(book.type)}</span>
+                <span class="book-location">\${escapeHtml(book.location)}</span>
+            </div>
             <div class="book-info">
                 <h3 class="book-title">\${escapeHtml(book.title)}</h3>
                 <p class="book-author">\${escapeHtml(book.author)}</p>
                 <div class="book-meta">
                     <span class="meta-item category">\${escapeHtml(book.category)}</span>
                     <span class="meta-item language">\${escapeHtml(book.language)}</span>
-                    <span class="meta-item location">\${escapeHtml(book.location)}</span>
-                    <span class="meta-item type">\${escapeHtml(book.type)}</span>
                 </div>
-                <p class="book-source">Source: \${escapeHtml(book.source)}</p>
             </div>
         </div>
     \`).join('');
@@ -637,23 +638,61 @@ header p {
 
 .book-card {
     background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
 }
 
 .book-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    border-color: #e0e0e0;
+}
+
+.book-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.book-type {
+    background: #667eea;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.book-location {
+    background: #28a745;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.book-info {
+    padding: 1.5rem;
 }
 
 .book-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #2c3e50;
-    line-height: 1.4;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #1a1a1a;
+    line-height: 1.3;
 }
 
 .book-author {
@@ -680,30 +719,22 @@ header p {
 }
 
 .meta-item.category {
-    background: #e3f2fd;
-    color: #1976d2;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    padding: 8px 16px;
+    font-size: 13px;
 }
 
 .meta-item.language {
-    background: #f3e5f5;
-    color: #7b1fa2;
-}
-
-.meta-item.location {
-    background: #e8f5e8;
-    color: #388e3c;
-}
-
-.meta-item.type {
-    background: #fff3e0;
-    color: #f57c00;
-}
-
-.book-source {
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #e9ecef;
+    padding: 6px 12px;
     font-size: 12px;
-    color: #999;
-    font-style: italic;
 }
+
+
 
 /* No Results */
 .no-results {
