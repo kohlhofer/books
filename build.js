@@ -408,6 +408,9 @@ async function build() {
 
 // Generate the main HTML
 function generateHTML(books, categories, languages, locations, types) {
+    // Pre-build all book cards
+    const bookCards = books.map(book => generateBookCard(book, '')).join('');
+    
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -479,7 +482,7 @@ function generateHTML(books, categories, languages, locations, types) {
         </div>
         
         <div class="books-grid" id="booksGrid">
-            <!-- Books will be populated here -->
+            ${bookCards}
         </div>
         
         <div id="noResults" class="no-results" style="display: none;">
@@ -516,7 +519,7 @@ function generateAuthorsHTML(books) {
     const authorsList = sortedAuthors.map(author => {
         const count = authorGroups[author].length;
         const authorSlug = author.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
-        return `<div class="index-item">
+        return `<div class="index-item" data-author="${escapeHtml(author)}" data-count="${count}">
             <a href="authors/${authorSlug}.html" class="index-link">
                 <h3>${escapeHtml(author)}</h3>
                 <div class="count">${count} book${count !== 1 ? 's' : ''}</div>
@@ -547,12 +550,28 @@ function generateAuthorsHTML(books) {
     
     <main class="container">
         <div class="index-section">
+            <div class="index-controls">
+                <div class="search-box">
+                    <input type="text" id="authorSearch" placeholder="Search authors...">
+                </div>
+                <div class="sort-controls">
+                    <label for="sortSelect">Sort by:</label>
+                    <select id="sortSelect">
+                        <option value="name">Author Name</option>
+                        <option value="count">Number of Books</option>
+                    </select>
+                </div>
+            </div>
+            
             <h2>Authors (${sortedAuthors.length})</h2>
-            <div class="index-grid">
+            <div class="index-grid" id="authorsGrid">
                 ${authorsList}
             </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <p>No authors found matching your search.</p>
+            </div>
         </div>
-        
     </main>
     
     <footer>
@@ -560,6 +579,65 @@ function generateAuthorsHTML(books) {
             <p>&copy; 2024 Book Shelf. Built with ❤️ for book lovers.</p>
         </div>
     </footer>
+    
+    <script>
+        // Authors page functionality
+        const authorSearch = document.getElementById('authorSearch');
+        const sortSelect = document.getElementById('sortSelect');
+        const authorsGrid = document.getElementById('authorsGrid');
+        const noResults = document.getElementById('noResults');
+        
+        // Store original order for sorting
+        const originalItems = Array.from(authorsGrid.children);
+        
+        function filterAndSortAuthors() {
+            const searchTerm = authorSearch.value.toLowerCase();
+            const sortBy = sortSelect.value;
+            
+            // Filter authors
+            const filteredItems = originalItems.filter(item => {
+                const authorName = item.dataset.author.toLowerCase();
+                return authorName.includes(searchTerm);
+            });
+            
+            // Sort filtered items
+            if (sortBy === 'count') {
+                filteredItems.sort((a, b) => {
+                    const countA = parseInt(a.dataset.count);
+                    const countB = parseInt(b.dataset.count);
+                    return countB - countA; // Descending order (most books first)
+                });
+            } else {
+                // Sort by name (alphabetical)
+                filteredItems.sort((a, b) => {
+                    const nameA = a.dataset.author.toLowerCase();
+                    const nameB = b.dataset.author.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+            }
+            
+            // Update display
+            if (filteredItems.length === 0) {
+                authorsGrid.innerHTML = '';
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                authorsGrid.innerHTML = '';
+                filteredItems.forEach(item => {
+                    authorsGrid.appendChild(item.cloneNode(true));
+                });
+            }
+        }
+        
+        // Event listeners
+        authorSearch.addEventListener('input', filterAndSortAuthors);
+        sortSelect.addEventListener('change', filterAndSortAuthors);
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            filterAndSortAuthors();
+        });
+    </script>
 </body>
 </html>`;
 }
@@ -727,40 +805,6 @@ function generateJavaScript(books) {
     return `// Book data
 const allBooks = ${JSON.stringify(books)};
 
-// Helper function to escape HTML
-function escapeHtml(text) {
-    if (!text) return '';
-    return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-}
-
-// Helper function to generate book card HTML
-function generateBookCard(book, basePath = '') {
-    const authorSlug = (book.author || 'Unknown Author').replace(/[^a-zA-Z0-9\\s]/g, '').replace(/\\s+/g, '-').toLowerCase();
-    const categorySlug = (book.category || 'Unknown').replace(/[^a-zA-Z0-9\\s]/g, '').replace(/\\s+/g, '-').toLowerCase();
-    
-    return \`
-        <div class="book-card">
-            <div class="book-header">
-                <span class="book-type">\${escapeHtml(book.type)}</span>
-                <span class="book-location">\${escapeHtml(book.location)}</span>
-            </div>
-            <div class="book-info">
-                <h3 class="book-title">\${escapeHtml(book.title)}</h3>
-                <p class="book-author"><a href="\${basePath}authors/\${authorSlug}.html" class="author-link">\${escapeHtml(book.author)}</a></p>
-                <div class="book-meta">
-                    <a href="\${basePath}categories/\${categorySlug}.html" class="meta-item category clickable">\${escapeHtml(book.category)}</a>
-                    <span class="meta-item language">\${escapeHtml(book.language)}</span>
-                </div>
-            </div>
-        </div>
-    \`;
-}
-
 // DOM elements
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
@@ -774,20 +818,18 @@ const bookCount = document.getElementById('bookCount');
 const filteredCount = document.getElementById('filteredCount');
 const noResults = document.getElementById('noResults');
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check for URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const authorParam = urlParams.get('author');
-            
-            if (authorParam) {
-                // Auto-filter by author from URL parameter
-                filterByAuthor(decodeURIComponent(authorParam));
-            } else {
-                displayBooks(allBooks);
-            }
-            setupEventListeners();
-        });
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    // Check for URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const authorParam = urlParams.get('author');
+    
+    if (authorParam) {
+        // Auto-filter by author from URL parameter
+        filterByAuthor(decodeURIComponent(authorParam));
+    }
+    setupEventListeners();
+});
 
 function setupEventListeners() {
     searchInput.addEventListener('input', filterBooks);
@@ -842,26 +884,50 @@ function displayBooks(books) {
     
     noResults.style.display = 'none';
     
-    const booksHTML = books.map(book => generateBookCard(book)).join('');
+    // Get all book cards
+    const allCards = booksGrid.querySelectorAll('.book-card');
     
-    booksGrid.innerHTML = booksHTML;
+    // Show/hide cards based on filtered results
+    allCards.forEach(card => {
+        const title = card.querySelector('.book-title').textContent;
+        const author = card.querySelector('.book-author a').textContent;
+        const category = card.querySelector('.meta-item.category').textContent;
+        
+        // Check if this card matches the current filter
+        const matchesSearch = !searchInput.value.toLowerCase() || 
+            title.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            author.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+            category.toLowerCase().includes(searchInput.value.toLowerCase());
+            
+        const matchesCategory = !categoryFilter.value || category === categoryFilter.value;
+        const matchesLanguage = !languageFilter.value || card.querySelector('.meta-item.language').textContent === languageFilter.value;
+        const matchesLocation = !locationFilter.value || card.querySelector('.book-location').textContent === locationFilter.value;
+        const matchesType = !typeFilter.value || card.querySelector('.book-type').textContent === typeFilter.value;
+        
+        const shouldShow = matchesSearch && matchesCategory && matchesLanguage && matchesLocation && matchesType;
+        card.style.display = shouldShow ? 'block' : 'none';
+    });
+    
+    // Update visible count
+    const visibleCards = booksGrid.querySelectorAll('.book-card[style*="display: block"], .book-card:not([style*="display: none"])');
+    updateStats(visibleCards.length);
 }
 
 function updateStats(filteredCount) {
     const total = allBooks.length;
     if (filteredCount === total) {
-        this.filteredCount.textContent = '';
+        filteredCount.textContent = '';
     } else {
-        this.filteredCount.textContent = \` | Showing: \${filteredCount} books\`;
+        filteredCount.textContent = \` | Showing: \${filteredCount} books\`;
     }
 }
 
-
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+function filterByAuthor(authorName) {
+    // This function can be used for URL-based filtering
+    // For now, just clear other filters and search for the author
+    clearFilters();
+    searchInput.value = authorName;
+    filterBooks();
 }`;
 }
 
@@ -1191,6 +1257,62 @@ footer {
     padding-bottom: 0.5rem;
 }
 
+.index-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.index-controls .search-box {
+    flex: 1;
+    min-width: 250px;
+}
+
+.index-controls .search-box input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.index-controls .search-box input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sort-controls label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+    white-space: nowrap;
+}
+
+.sort-controls select {
+    padding: 8px 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.sort-controls select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
 .index-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -1307,7 +1429,22 @@ footer {
         flex-direction: column;
         gap: 0.5rem;
     }
-}`;
+    
+    .index-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .index-controls .search-box {
+        min-width: auto;
+    }
+    
+    .sort-controls {
+        justify-content: center;
+    }
+}
+`;
 }
 
 // Run the build
