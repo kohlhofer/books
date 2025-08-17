@@ -605,6 +605,18 @@ function generateCategoriesHTML(books) {
     <script>
         const allBooks = ${JSON.stringify(books)};
         
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+            
+            if (categoryParam) {
+                // Auto-filter by category from URL parameter
+                filterByCategory(decodeURIComponent(categoryParam));
+            }
+        });
+        
         function filterByCategory(category) {
             const filtered = allBooks.filter(book => book.category === category);
             displayFilteredBooks(filtered, category);
@@ -634,9 +646,9 @@ function generateCategoriesHTML(books) {
                     </div>
                     <div class="book-info">
                         <h3 class="book-title">\${escapeHtml(book.title)}</h3>
-                        <p class="book-author">\${escapeHtml(book.author)}</p>
+                        <p class="book-author"><a href="authors.html" onclick="filterByAuthor('\${escapeHtml(book.author)}'); return false;" class="author-link">\${escapeHtml(book.author)}</a></p>
                         <div class="book-meta">
-                            <span class="meta-item category">\${escapeHtml(book.category)}</span>
+                            <a href="categories.html" onclick="filterByCategory('\${escapeHtml(book.category)}'); return false;" class="meta-item category clickable">\${escapeHtml(book.category)}</a>
                             <span class="meta-item language">\${escapeHtml(book.language)}</span>
                         </div>
                     </div>
@@ -664,6 +676,12 @@ function generateCategoriesHTML(books) {
             div.textContent = text;
             return div.innerHTML;
         }
+        
+        // Function for linking to author page
+        function filterByAuthor(author) {
+            // Navigate to authors page and filter
+            window.location.href = \`authors.html?author=\${encodeURIComponent(author)}\`;
+        }
     </script>
 </body>
 </html>`;
@@ -687,11 +705,20 @@ const bookCount = document.getElementById('bookCount');
 const filteredCount = document.getElementById('filteredCount');
 const noResults = document.getElementById('noResults');
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    displayBooks(allBooks);
-    setupEventListeners();
-});
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const authorParam = urlParams.get('author');
+            
+            if (authorParam) {
+                // Auto-filter by author from URL parameter
+                filterByAuthor(decodeURIComponent(authorParam));
+            } else {
+                displayBooks(allBooks);
+            }
+            setupEventListeners();
+        });
 
 function setupEventListeners() {
     searchInput.addEventListener('input', filterBooks);
@@ -754,9 +781,9 @@ function displayBooks(books) {
             </div>
             <div class="book-info">
                 <h3 class="book-title">\${escapeHtml(book.title)}</h3>
-                <p class="book-author">\${escapeHtml(book.author)}</p>
+                <p class="book-author"><a href="authors.html" onclick="filterByAuthor('\${escapeHtml(book.author)}'); return false;" class="author-link">\${escapeHtml(book.author)}</a></p>
                 <div class="book-meta">
-                    <span class="meta-item category">\${escapeHtml(book.category)}</span>
+                    <a href="categories.html" onclick="filterByCategory('\${escapeHtml(book.category)}'); return false;" class="meta-item category clickable">\${escapeHtml(book.category)}</a>
                     <span class="meta-item language">\${escapeHtml(book.language)}</span>
                 </div>
             </div>
@@ -773,6 +800,17 @@ function updateStats(filteredCount) {
     } else {
         this.filteredCount.textContent = \` | Showing: \${filteredCount} books\`;
     }
+}
+
+// Functions for linking to author and category pages
+function filterByAuthor(author) {
+    // Navigate to authors page and filter
+    window.location.href = \`authors.html?author=\${encodeURIComponent(author)}\`;
+}
+
+function filterByCategory(category) {
+    // Navigate to categories page and filter
+    window.location.href = \`categories.html?category=\${encodeURIComponent(category)}\`;
 }
 
 function escapeHtml(text) {
@@ -1045,6 +1083,28 @@ header p {
     border: 1px solid #e9ecef;
     padding: 6px 12px;
     font-size: 12px;
+}
+
+/* Clickable links */
+.author-link {
+    color: #667eea;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.author-link:hover {
+    color: #5a6fd8;
+    text-decoration: underline;
+}
+
+.meta-item.clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.meta-item.clickable:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 
