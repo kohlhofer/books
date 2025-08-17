@@ -1,0 +1,17 @@
+{
+  "name": "book-shelf-website",
+  "version": "1.0.0",
+  "description": "A static website to browse, filter, and search through your book collection",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "cd dist && python3 -m http.server 8000",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["books", "library", "static-site", "github-pages"],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "csv-parser": "^3.0.0"
+  }
+} 
