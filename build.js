@@ -660,7 +660,7 @@ function generateCategoriesHTML(books) {
     const categoriesList = sortedCategories.map(category => {
         const count = categoryGroups[category].length;
         const categorySlug = category.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
-        return `<div class="index-item">
+        return `<div class="index-item" data-category="${escapeHtml(category)}" data-count="${count}">
             <a href="categories/${categorySlug}.html" class="index-link">
                 <h3>${escapeHtml(category)}</h3>
                 <div class="count">${count} book${count !== 1 ? 's' : ''}</div>
@@ -691,12 +691,28 @@ function generateCategoriesHTML(books) {
     
     <main class="container">
         <div class="index-section">
+            <div class="index-controls">
+                <div class="search-box">
+                    <input type="text" id="categorySearch" placeholder="Search categories...">
+                </div>
+                <div class="sort-controls">
+                    <label for="sortSelect">Sort by:</label>
+                    <select id="sortSelect">
+                        <option value="name">Category Name</option>
+                        <option value="count">Number of Books</option>
+                    </select>
+                </div>
+            </div>
+            
             <h2>Categories (${sortedCategories.length})</h2>
-            <div class="index-grid">
+            <div class="index-grid" id="categoriesGrid">
                 ${categoriesList}
             </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <p>No categories found matching your search.</p>
+            </div>
         </div>
-        
     </main>
     
     <footer>
@@ -704,6 +720,65 @@ function generateCategoriesHTML(books) {
             <p>&copy; 2024 Book Shelf. Built with ❤️ for book lovers.</p>
         </div>
     </footer>
+    
+    <script>
+        // Categories page functionality
+        const categorySearch = document.getElementById('categorySearch');
+        const sortSelect = document.getElementById('sortSelect');
+        const categoriesGrid = document.getElementById('categoriesGrid');
+        const noResults = document.getElementById('noResults');
+        
+        // Store original order for sorting
+        const originalItems = Array.from(categoriesGrid.children);
+        
+        function filterAndSortCategories() {
+            const searchTerm = categorySearch.value.toLowerCase();
+            const sortBy = sortSelect.value;
+            
+            // Filter categories
+            const filteredItems = originalItems.filter(item => {
+                const categoryName = item.dataset.category.toLowerCase();
+                return categoryName.includes(searchTerm);
+            });
+            
+            // Sort filtered items
+            if (sortBy === 'count') {
+                filteredItems.sort((a, b) => {
+                    const countA = parseInt(a.dataset.count);
+                    const countB = parseInt(b.dataset.count);
+                    return countB - countA; // Descending order (most books first)
+                });
+            } else {
+                // Sort by name (alphabetical)
+                filteredItems.sort((a, b) => {
+                    const nameA = a.dataset.category.toLowerCase();
+                    const nameB = b.dataset.category.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+            }
+            
+            // Update display
+            if (filteredItems.length === 0) {
+                categoriesGrid.innerHTML = '';
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                categoriesGrid.innerHTML = '';
+                filteredItems.forEach(item => {
+                    categoriesGrid.appendChild(item.cloneNode(true));
+                });
+            }
+        }
+        
+        // Event listeners
+        categorySearch.addEventListener('input', filterAndSortCategories);
+        sortSelect.addEventListener('change', filterAndSortCategories);
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            filterAndSortCategories();
+        });
+    </script>
 </body>
 </html>`;
 }
