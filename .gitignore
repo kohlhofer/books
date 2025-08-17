@@ -60,4 +60,11 @@ jspm_packages/
 *.tgz
 
 # Yarn Integrity file
-.yarn-integrity 
+.yarn-integrity
+
+# Raw data files (keep processed CSV files)
+*_raw
+
+# Temporary files
+*.tmp
+*.temp 
