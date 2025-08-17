@@ -18,6 +18,29 @@ function escapeHtml(text) {
         .replace(/'/g, '&#039;');
 }
 
+// Helper function to generate book card HTML
+function generateBookCard(book, basePath = '') {
+    const authorSlug = (book.author || 'Unknown Author').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+    const categorySlug = (book.category || 'Unknown').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+    
+    return `
+        <div class="book-card">
+            <div class="book-header">
+                <span class="book-type">${escapeHtml(book.type)}</span>
+                <span class="book-location">${escapeHtml(book.location)}</span>
+            </div>
+            <div class="book-info">
+                <h3 class="book-title">${escapeHtml(book.title)}</h3>
+                <p class="book-author"><a href="${basePath}authors/${authorSlug}.html" class="author-link">${escapeHtml(book.author)}</a></p>
+                <div class="book-meta">
+                    <a href="${basePath}categories/${categorySlug}.html" class="meta-item category clickable">${escapeHtml(book.category)}</a>
+                    <span class="meta-item language">${escapeHtml(book.language)}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // Custom CSV parser that handles quoted fields with colons properly
 function parseCSVLine(line) {
     const result = [];
@@ -581,22 +604,7 @@ function generateCategoriesHTML(books) {
 
 // Generate individual author page
 function generateAuthorPage(author, authorBooks, allBooks) {
-    const booksHTML = authorBooks.map(book => `
-        <div class="book-card">
-            <div class="book-header">
-                <span class="book-type">${escapeHtml(book.type)}</span>
-                <span class="book-location">${escapeHtml(book.location)}</span>
-            </div>
-            <div class="book-info">
-                <h3 class="book-title">${escapeHtml(book.title)}</h3>
-                <p class="book-author"><a href="../authors.html" class="author-link">${escapeHtml(book.author)}</a></p>
-                <div class="book-meta">
-                    <a href="../categories/${(book.category || 'Unknown').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}.html" class="meta-item category clickable">${escapeHtml(book.category)}</a>
-                    <span class="meta-item language">${escapeHtml(book.language)}</span>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    const booksHTML = authorBooks.map(book => generateBookCard(book, '../')).join('');
     
     return `<!DOCTYPE html>
 <html lang="en">
@@ -642,22 +650,7 @@ function generateAuthorPage(author, authorBooks, allBooks) {
 
 // Generate individual category page
 function generateCategoryPage(category, categoryBooks, allBooks) {
-    const booksHTML = categoryBooks.map(book => `
-        <div class="book-card">
-            <div class="book-header">
-                <span class="book-type">${escapeHtml(book.type)}</span>
-                <span class="book-location">${escapeHtml(book.location)}</span>
-            </div>
-            <div class="book-info">
-                <h3 class="book-title">${escapeHtml(book.title)}</h3>
-                <p class="book-author"><a href="../authors/${(book.author || 'Unknown Author').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}.html" class="author-link">${escapeHtml(book.author)}</a></p>
-                <div class="book-meta">
-                    <a href="../categories.html" class="meta-item category clickable">${escapeHtml(book.category)}</a>
-                    <span class="meta-item language">${escapeHtml(book.language)}</span>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    const booksHTML = categoryBooks.map(book => generateBookCard(book, '../')).join('');
     
     return `<!DOCTYPE html>
 <html lang="en">
@@ -787,22 +780,7 @@ function displayBooks(books) {
     
     noResults.style.display = 'none';
     
-    const booksHTML = books.map(book => \`
-        <div class="book-card">
-            <div class="book-header">
-                <span class="book-type">\${escapeHtml(book.type)}</span>
-                <span class="book-location">\${escapeHtml(book.location)}</span>
-            </div>
-            <div class="book-info">
-                <h3 class="book-title">\${escapeHtml(book.title)}</h3>
-                <p class="book-author"><a href="authors/\${(book.author || 'Unknown Author').replace(/[^a-zA-Z0-9\\s]/g, '').replace(/\\s+/g, '-').toLowerCase()}.html" class="author-link">\${escapeHtml(book.author)}</a></p>
-                <div class="book-meta">
-                    <a href="categories/\${(book.category || 'Unknown').replace(/[^a-zA-Z0-9\\s]/g, '').replace(/\\s+/g, '-').toLowerCase()}.html" class="meta-item category clickable">\${escapeHtml(book.category)}</a>
-                    <span class="meta-item language">\${escapeHtml(book.language)}</span>
-                </div>
-            </div>
-        </div>
-    \`).join('');
+    const booksHTML = books.map(book => generateBookCard(book)).join('');
     
     booksGrid.innerHTML = booksHTML;
 }
@@ -1016,7 +994,7 @@ header p {
 
 .book-header {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 1rem;
     border-bottom: 1px solid #f0f0f0;
     display: flex;
     justify-content: space-between;
@@ -1025,7 +1003,7 @@ header p {
 
 .book-type {
     color: #6c757d;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -1033,7 +1011,7 @@ header p {
 
 .book-location {
     color: #6c757d;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
