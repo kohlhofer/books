@@ -285,9 +285,55 @@ async function build() {
         const authorsHtml = generateAuthorsHTML(allBooks);
         fs.writeFileSync(path.join(distDir, 'authors.html'), authorsHtml);
         
+        // Create individual author pages
+        const authorGroups = {};
+        allBooks.forEach(book => {
+            const author = book.author || 'Unknown Author';
+            if (!authorGroups[author]) {
+                authorGroups[author] = [];
+            }
+            authorGroups[author].push(book);
+        });
+        
+        // Create authors directory
+        const authorsDir = path.join(distDir, 'authors');
+        if (!fs.existsSync(authorsDir)) {
+            fs.mkdirSync(authorsDir);
+        }
+        
+        // Generate individual author pages
+        Object.keys(authorGroups).forEach(author => {
+            const authorSlug = author.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+            const authorHtml = generateAuthorPage(author, authorGroups[author], allBooks);
+            fs.writeFileSync(path.join(authorsDir, `${authorSlug}.html`), authorHtml);
+        });
+        
         // Create the category index page
         const categoriesHtml = generateCategoriesHTML(allBooks);
         fs.writeFileSync(path.join(distDir, 'categories.html'), categoriesHtml);
+        
+        // Create individual category pages
+        const categoryGroups = {};
+        allBooks.forEach(book => {
+            const category = book.category || 'Unknown';
+            if (!categoryGroups[category]) {
+                categoryGroups[category] = [];
+            }
+            categoryGroups[category].push(book);
+        });
+        
+        // Create categories directory
+        const categoriesDir = path.join(distDir, 'categories');
+        if (!fs.existsSync(categoriesDir)) {
+            fs.mkdirSync(categoriesDir);
+        }
+        
+        // Generate individual category pages
+        Object.keys(categoryGroups).forEach(category => {
+            const categorySlug = category.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+            const categoryHtml = generateCategoryPage(category, categoryGroups[category], allBooks);
+            fs.writeFileSync(path.join(categoriesDir, `${categorySlug}.html`), categoryHtml);
+        });
         
         // Create the JavaScript file
         const js = generateJavaScript(allBooks);
@@ -418,9 +464,12 @@ function generateAuthorsHTML(books) {
     
     const authorsList = sortedAuthors.map(author => {
         const count = authorGroups[author].length;
-        return `<div class="index-item" onclick="filterByAuthor('${author.replace(/'/g, "\\'")}')">
-            <h3>${escapeHtml(author)}</h3>
-            <div class="count">${count} book${count !== 1 ? 's' : ''}</div>
+        const authorSlug = author.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+        return `<div class="index-item">
+            <a href="authors/${authorSlug}.html" class="index-link">
+                <h3>${escapeHtml(author)}</h3>
+                <div class="count">${count} book${count !== 1 ? 's' : ''}</div>
+            </a>
         </div>`;
     }).join('');
     
@@ -453,13 +502,6 @@ function generateAuthorsHTML(books) {
             </div>
         </div>
         
-        <div class="books-grid" id="booksGrid" style="display: none;">
-            <!-- Filtered books will appear here -->
-        </div>
-        
-        <div id="noResults" class="no-results" style="display: none;">
-            <p>No books found for this author.</p>
-        </div>
     </main>
     
     <footer>
@@ -467,70 +509,6 @@ function generateAuthorsHTML(books) {
             <p>&copy; 2024 Book Shelf. Built with ❤️ for book lovers.</p>
         </div>
     </footer>
-    
-    <script>
-        const allBooks = ${JSON.stringify(books)};
-        
-        function filterByAuthor(author) {
-            const filtered = allBooks.filter(book => book.author === author);
-            displayFilteredBooks(filtered, author);
-        }
-        
-        function displayFilteredBooks(books, author) {
-            const booksGrid = document.getElementById('booksGrid');
-            const noResults = document.getElementById('noResults');
-            const indexSection = document.querySelector('.index-section');
-            
-            if (books.length === 0) {
-                booksGrid.style.display = 'none';
-                noResults.style.display = 'block';
-                indexSection.style.display = 'none';
-                return;
-            }
-            
-            noResults.style.display = 'none';
-            indexSection.style.display = 'none';
-            booksGrid.style.display = 'grid';
-            
-            const booksHTML = books.map(book => \`
-                <div class="book-card">
-                    <div class="book-header">
-                        <span class="book-type">\${escapeHtml(book.type)}</span>
-                        <span class="book-location">\${escapeHtml(book.location)}</span>
-                    </div>
-                    <div class="book-info">
-                        <h3 class="book-title">\${escapeHtml(book.title)}</h3>
-                        <p class="book-author">\${escapeHtml(book.author)}</p>
-                        <div class="book-meta">
-                            <span class="meta-item category">\${escapeHtml(book.category)}</span>
-                            <span class="meta-item language">\${escapeHtml(book.language)}</span>
-                        </div>
-                    </div>
-                </div>
-            \`).join('');
-            
-            booksGrid.innerHTML = booksHTML;
-            
-            // Add back button
-            const backBtn = \`<div style="margin-bottom: 2rem;"><button onclick="showAuthors()" style="padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">← Back to Authors</button></div>\`;
-            booksGrid.insertAdjacentHTML('beforebegin', backBtn);
-        }
-        
-        function showAuthors() {
-            document.querySelector('.index-section').style.display = 'block';
-            document.getElementById('booksGrid').style.display = 'none';
-            document.getElementById('noResults').style.display = 'none';
-            // Remove back button
-            const backBtn = document.querySelector('button[onclick="showAuthors()"]');
-            if (backBtn) backBtn.remove();
-        }
-        
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-    </script>
 </body>
 </html>`;
 }
@@ -552,9 +530,12 @@ function generateCategoriesHTML(books) {
     
     const categoriesList = sortedCategories.map(category => {
         const count = categoryGroups[category].length;
-        return `<div class="index-item" onclick="filterByCategory('${category.replace(/'/g, "\\'")}')">
-            <h3>${escapeHtml(category)}</h3>
-            <div class="count">${count} book${count !== 1 ? 's' : ''}</div>
+        const categorySlug = category.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+        return `<div class="index-item">
+            <a href="categories/${categorySlug}.html" class="index-link">
+                <h3>${escapeHtml(category)}</h3>
+                <div class="count">${count} book${count !== 1 ? 's' : ''}</div>
+            </a>
         </div>`;
     }).join('');
     
@@ -587,12 +568,66 @@ function generateCategoriesHTML(books) {
             </div>
         </div>
         
-        <div class="books-grid" id="booksGrid" style="display: none;">
-            <!-- Filtered books will appear here -->
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Book Shelf. Built with ❤️ for book lovers.</p>
+        </div>
+    </footer>
+</body>
+</html>`;
+}
+
+// Generate individual author page
+function generateAuthorPage(author, authorBooks, allBooks) {
+    const booksHTML = authorBooks.map(book => `
+        <div class="book-card">
+            <div class="book-header">
+                <span class="book-type">${escapeHtml(book.type)}</span>
+                <span class="book-location">${escapeHtml(book.location)}</span>
+            </div>
+            <div class="book-info">
+                <h3 class="book-title">${escapeHtml(book.title)}</h3>
+                <p class="book-author"><a href="../authors.html" class="author-link">${escapeHtml(book.author)}</a></p>
+                <div class="book-meta">
+                    <a href="../categories/${(book.category || 'Unknown').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}.html" class="meta-item category clickable">${escapeHtml(book.category)}</a>
+                    <span class="meta-item language">${escapeHtml(book.language)}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(author)} - Book Shelf</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Book Shelf</h1>
+            <p>Books by ${escapeHtml(author)}</p>
+            <nav class="main-nav">
+                <a href="../index.html" class="nav-link">All Books</a>
+                <a href="../authors.html" class="nav-link active">Authors</a>
+                <a href="../categories.html" class="nav-link">Categories</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="author-header">
+            <h2>${escapeHtml(author)}</h2>
+            <p class="book-count">${authorBooks.length} book${authorBooks.length !== 1 ? 's' : ''}</p>
+            <a href="../authors.html" class="back-link">← Back to Authors</a>
         </div>
         
-        <div id="noResults" class="no-results" style="display: none;">
-            <p>No books found for this category.</p>
+        <div class="books-grid">
+            ${booksHTML}
         </div>
     </main>
     
@@ -601,88 +636,67 @@ function generateCategoriesHTML(books) {
             <p>&copy; 2024 Book Shelf. Built with ❤️ for book lovers.</p>
         </div>
     </footer>
-    
-    <script>
-        const allBooks = ${JSON.stringify(books)};
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check for URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const categoryParam = urlParams.get('category');
-            
-            if (categoryParam) {
-                // Auto-filter by category from URL parameter
-                filterByCategory(decodeURIComponent(categoryParam));
-            }
-        });
-        
-        function filterByCategory(category) {
-            const filtered = allBooks.filter(book => book.category === category);
-            displayFilteredBooks(filtered, category);
-        }
-        
-        function displayFilteredBooks(books, category) {
-            const booksGrid = document.getElementById('booksGrid');
-            const noResults = document.getElementById('noResults');
-            const indexSection = document.querySelector('.index-section');
-            
-            if (books.length === 0) {
-                booksGrid.style.display = 'none';
-                noResults.style.display = 'block';
-                indexSection.style.display = 'none';
-                return;
-            }
-            
-            noResults.style.display = 'none';
-            indexSection.style.display = 'none';
-            booksGrid.style.display = 'grid';
-            
-            const booksHTML = books.map(book => \`
-                <div class="book-card">
-                    <div class="book-header">
-                        <span class="book-type">\${escapeHtml(book.type)}</span>
-                        <span class="book-location">\${escapeHtml(book.location)}</span>
-                    </div>
-                    <div class="book-info">
-                        <h3 class="book-title">\${escapeHtml(book.title)}</h3>
-                        <p class="book-author"><a href="authors.html" onclick="filterByAuthor('\${escapeHtml(book.author)}'); return false;" class="author-link">\${escapeHtml(book.author)}</a></p>
-                        <div class="book-meta">
-                            <a href="categories.html" onclick="filterByCategory('\${escapeHtml(book.category)}'); return false;" class="meta-item category clickable">\${escapeHtml(book.category)}</a>
-                            <span class="meta-item language">\${escapeHtml(book.language)}</span>
-                        </div>
-                    </div>
+</body>
+</html>`;
+}
+
+// Generate individual category page
+function generateCategoryPage(category, categoryBooks, allBooks) {
+    const booksHTML = categoryBooks.map(book => `
+        <div class="book-card">
+            <div class="book-header">
+                <span class="book-type">${escapeHtml(book.type)}</span>
+                <span class="book-location">${escapeHtml(book.location)}</span>
+            </div>
+            <div class="book-info">
+                <h3 class="book-title">${escapeHtml(book.title)}</h3>
+                <p class="book-author"><a href="../authors/${(book.author || 'Unknown Author').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()}.html" class="author-link">${escapeHtml(book.author)}</a></p>
+                <div class="book-meta">
+                    <a href="../categories.html" class="meta-item category clickable">${escapeHtml(book.category)}</a>
+                    <span class="meta-item language">${escapeHtml(book.language)}</span>
                 </div>
-            \`).join('');
-            
-            booksGrid.innerHTML = booksHTML;
-            
-            // Add back button
-            const backBtn = \`<div style="margin-bottom: 2rem;"><button onclick="showCategories()" style="padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">← Back to Categories</button></div>\`;
-            booksGrid.insertAdjacentHTML('beforebegin', backBtn);
-        }
+            </div>
+        </div>
+    `).join('');
+    
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(category)} - Book Shelf</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 Book Shelf</h1>
+            <p>Books in ${escapeHtml(category)}</p>
+            <nav class="main-nav">
+                <a href="../index.html" class="nav-link">All Books</a>
+                <a href="../authors.html" class="nav-link">Authors</a>
+                <a href="../categories.html" class="nav-link active">Categories</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="category-header">
+            <h2>${escapeHtml(category)}</h2>
+            <p class="book-count">${categoryBooks.length} book${categoryBooks.length !== 1 ? 's' : ''}</p>
+            <a href="../categories.html" class="back-link">← Back to Categories</a>
+        </div>
         
-        function showCategories() {
-            document.querySelector('.index-section').style.display = 'block';
-            document.getElementById('booksGrid').style.display = 'none';
-            document.getElementById('noResults').style.display = 'none';
-            // Remove back button
-            const backBtn = document.querySelector('button[onclick="showCategories()"]');
-            if (backBtn) backBtn.remove();
-        }
-        
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // Function for linking to author page
-        function filterByAuthor(author) {
-            // Navigate to authors page and filter
-            window.location.href = \`authors.html?author=\${encodeURIComponent(author)}\`;
-        }
-    </script>
+        <div class="books-grid">
+            ${booksHTML}
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Book Shelf. Built with ❤️ for book lovers.</p>
+        </div>
+    </footer>
 </body>
 </html>`;
 }
@@ -781,9 +795,9 @@ function displayBooks(books) {
             </div>
             <div class="book-info">
                 <h3 class="book-title">\${escapeHtml(book.title)}</h3>
-                <p class="book-author"><a href="authors.html" onclick="filterByAuthor('\${escapeHtml(book.author)}'); return false;" class="author-link">\${escapeHtml(book.author)}</a></p>
+                <p class="book-author"><a href="authors/\${(book.author || 'Unknown Author').replace(/[^a-zA-Z0-9\\s]/g, '').replace(/\\s+/g, '-').toLowerCase()}.html" class="author-link">\${escapeHtml(book.author)}</a></p>
                 <div class="book-meta">
-                    <a href="categories.html" onclick="filterByCategory('\${escapeHtml(book.category)}'); return false;" class="meta-item category clickable">\${escapeHtml(book.category)}</a>
+                    <a href="categories/\${(book.category || 'Unknown').replace(/[^a-zA-Z0-9\\s]/g, '').replace(/\\s+/g, '-').toLowerCase()}.html" class="meta-item category clickable">\${escapeHtml(book.category)}</a>
                     <span class="meta-item language">\${escapeHtml(book.language)}</span>
                 </div>
             </div>
@@ -802,16 +816,7 @@ function updateStats(filteredCount) {
     }
 }
 
-// Functions for linking to author and category pages
-function filterByAuthor(author) {
-    // Navigate to authors page and filter
-    window.location.href = \`authors.html?author=\${encodeURIComponent(author)}\`;
-}
 
-function filterByCategory(category) {
-    // Navigate to categories page and filter
-    window.location.href = \`categories.html?category=\${encodeURIComponent(category)}\`;
-}
 
 function escapeHtml(text) {
     const div = document.createElement('div');
@@ -1177,6 +1182,49 @@ footer {
     color: #6c757d;
     font-size: 0.9rem;
     font-weight: 500;
+}
+
+.index-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.author-header, .category-header {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.author-header h2, .category-header h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.book-count {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.back-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.back-link:hover {
+    background: #5a6fd8;
 }
 
 /* Responsive Design */
