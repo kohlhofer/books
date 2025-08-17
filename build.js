@@ -294,6 +294,34 @@ async function build() {
         
         console.log(`Total books: ${allBooks.length}`);
         
+        // Sort books by last name, first name, then title
+        allBooks.sort((a, b) => {
+            const authorA = a.author || 'Unknown Author';
+            const authorB = b.author || 'Unknown Author';
+            
+            // Split author names
+            const partsA = authorA.split(' ');
+            const partsB = authorB.split(' ');
+            
+            const lastNameA = partsA[partsA.length - 1] || '';
+            const lastNameB = partsB[partsB.length - 1] || '';
+            const firstNameA = partsA[0] || '';
+            const firstNameB = partsB[0] || '';
+            
+            // Compare last names first
+            if (lastNameA !== lastNameB) {
+                return lastNameA.localeCompare(lastNameB);
+            }
+            
+            // If last names are the same, compare first names
+            if (firstNameA !== firstNameB) {
+                return firstNameA.localeCompare(firstNameB);
+            }
+            
+            // If authors are the same, compare titles
+            return (a.title || '').localeCompare(b.title || '');
+        });
+        
         // Generate unique categories, languages, locations, and types
         const categories = [...new Set(allBooks.map(b => b.category).filter(c => c && c !== ''))].sort();
         const languages = [...new Set(allBooks.map(b => b.language).filter(l => l && l !== ''))].sort();
@@ -698,6 +726,40 @@ function generateCategoryPage(category, categoryBooks, allBooks) {
 function generateJavaScript(books) {
     return `// Book data
 const allBooks = ${JSON.stringify(books)};
+
+// Helper function to escape HTML
+function escapeHtml(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Helper function to generate book card HTML
+function generateBookCard(book, basePath = '') {
+    const authorSlug = (book.author || 'Unknown Author').replace(/[^a-zA-Z0-9\\s]/g, '').replace(/\\s+/g, '-').toLowerCase();
+    const categorySlug = (book.category || 'Unknown').replace(/[^a-zA-Z0-9\\s]/g, '').replace(/\\s+/g, '-').toLowerCase();
+    
+    return \`
+        <div class="book-card">
+            <div class="book-header">
+                <span class="book-type">\${escapeHtml(book.type)}</span>
+                <span class="book-location">\${escapeHtml(book.location)}</span>
+            </div>
+            <div class="book-info">
+                <h3 class="book-title">\${escapeHtml(book.title)}</h3>
+                <p class="book-author"><a href="\${basePath}authors/\${authorSlug}.html" class="author-link">\${escapeHtml(book.author)}</a></p>
+                <div class="book-meta">
+                    <a href="\${basePath}categories/\${categorySlug}.html" class="meta-item category clickable">\${escapeHtml(book.category)}</a>
+                    <span class="meta-item language">\${escapeHtml(book.language)}</span>
+                </div>
+            </div>
+        </div>
+    \`;
+}
 
 // DOM elements
 const searchInput = document.getElementById('searchInput');
