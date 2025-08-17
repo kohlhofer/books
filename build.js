@@ -19,9 +19,13 @@ function escapeHtml(text) {
 }
 
 // Helper function to generate book card HTML
-function generateBookCard(book, basePath = '') {
+function generateBookCard(book, basePath = '', authorCounts = {}, categoryCounts = {}) {
     const authorSlug = (book.author || 'Unknown Author').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
     const categorySlug = (book.category || 'Unknown').replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+    
+    // Get counts for this author and category
+    const authorCount = authorCounts[book.author] || 1;
+    const categoryCount = categoryCounts[book.category] || 1;
     
     return `
         <div class="book-card">
@@ -31,9 +35,9 @@ function generateBookCard(book, basePath = '') {
             </div>
             <div class="book-info">
                 <h3 class="book-title">${escapeHtml(book.title)}</h3>
-                <p class="book-author"><a href="${basePath}authors/${authorSlug}.html" class="author-link">${escapeHtml(book.author)}</a></p>
+                <p class="book-author"><a href="${basePath}authors/${authorSlug}.html" class="author-link">${escapeHtml(book.author)} (${authorCount})</a></p>
                 <div class="book-meta">
-                    <a href="${basePath}categories/${categorySlug}.html" class="meta-item category clickable">${escapeHtml(book.category)}</a>
+                    <a href="${basePath}categories/${categorySlug}.html" class="meta-item category clickable">${escapeHtml(book.category)} (${categoryCount})</a>
                     <span class="meta-item language">${escapeHtml(book.language)}</span>
                 </div>
             </div>
@@ -408,8 +412,20 @@ async function build() {
 
 // Generate the main HTML
 function generateHTML(books, categories, languages, locations, types) {
+    // Calculate author and category counts
+    const authorCounts = {};
+    const categoryCounts = {};
+    
+    books.forEach(book => {
+        const author = book.author || 'Unknown Author';
+        const category = book.category || 'Unknown';
+        
+        authorCounts[author] = (authorCounts[author] || 0) + 1;
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+    });
+    
     // Pre-build all book cards
-    const bookCards = books.map(book => generateBookCard(book, '')).join('');
+    const bookCards = books.map(book => generateBookCard(book, '', authorCounts, categoryCounts)).join('');
     
     return `<!DOCTYPE html>
 <html lang="en">
@@ -785,7 +801,19 @@ function generateCategoriesHTML(books) {
 
 // Generate individual author page
 function generateAuthorPage(author, authorBooks, allBooks) {
-    const booksHTML = authorBooks.map(book => generateBookCard(book, '../')).join('');
+    // Calculate author and category counts for all books
+    const authorCounts = {};
+    const categoryCounts = {};
+    
+    allBooks.forEach(book => {
+        const bookAuthor = book.author || 'Unknown Author';
+        const category = book.category || 'Unknown';
+        
+        authorCounts[bookAuthor] = (authorCounts[bookAuthor] || 0) + 1;
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+    });
+    
+    const booksHTML = authorBooks.map(book => generateBookCard(book, '../', authorCounts, categoryCounts)).join('');
     
     return `<!DOCTYPE html>
 <html lang="en">
@@ -831,7 +859,19 @@ function generateAuthorPage(author, authorBooks, allBooks) {
 
 // Generate individual category page
 function generateCategoryPage(category, categoryBooks, allBooks) {
-    const booksHTML = categoryBooks.map(book => generateBookCard(book, '../')).join('');
+    // Calculate author and category counts for all books
+    const authorCounts = {};
+    const categoryCounts = {};
+    
+    allBooks.forEach(book => {
+        const bookAuthor = book.author || 'Unknown Author';
+        const bookCategory = book.category || 'Unknown';
+        
+        authorCounts[bookAuthor] = (authorCounts[bookAuthor] || 0) + 1;
+        categoryCounts[bookCategory] = (categoryCounts[bookCategory] || 0) + 1;
+    });
+    
+    const booksHTML = categoryBooks.map(book => generateBookCard(book, '../', authorCounts, categoryCounts)).join('');
     
     return `<!DOCTYPE html>
 <html lang="en">
