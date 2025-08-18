@@ -1,11 +1,11 @@
 {{> search-section}}
 
-<div class="books-grid">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-8">
     {{#each books}}
     {{> book-card this basePath=../basePath isAuthors=../isAuthors isCategories=../isCategories}}
     {{/each}}
 </div>
 
-<div class="stats">
+<div class="text-center text-secondary mt-8">
     <p>Showing <span id="filteredCount">{{books.length}}</span> of {{totalBooks}} books</p>
 </div>

@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .search-box input {
+    @apply w-full px-3 py-2 border border-border rounded-lg bg-white shadow-card focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10;
+  }
+
+  .filter-group {
+    @apply flex gap-4 mb-4;
+  }
+
+  .filter-group select {
+    @apply px-3 py-2 border border-border rounded-md bg-white shadow-card cursor-pointer appearance-none bg-no-repeat bg-right pr-8;
+  }
+
+  .sort-controls {
+    @apply flex justify-end;
+  }
+
+  .sort-controls select {
+    @apply px-3 py-2 border border-border rounded-md bg-white shadow-card cursor-pointer appearance-none bg-no-repeat bg-right pr-8;
+  }
+
+  .books-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-8;
+  }
+
+  .book-card {
+    @apply bg-white rounded-lg overflow-hidden shadow-card transition-all hover:shadow-card-hover hover:-translate-y-0.5 flex flex-col h-full;
+  }
+
+  .book-type-bar {
+    @apply flex justify-between items-center px-4 py-2 bg-background border-b border-border;
+  }
+
+  .book-type, .book-location {
+    @apply text-secondary text-xs font-normal;
+  }
+
+  .book-info {
+    @apply p-4 flex-1 flex flex-col;
+  }
+
+  .book-title {
+    @apply text-lg mb-1 text-gray-800;
+  }
+
+  .book-author {
+    @apply text-primary mb-4 text-sm;
+  }
+
+  .book-author a {
+    @apply text-primary no-underline transition-colors hover:text-primary/80 hover:underline;
+  }
+
+  .book-category {
+    @apply text-secondary text-sm uppercase tracking-wider;
+  }
+
+  .book-category a {
+    @apply text-secondary no-underline transition-colors hover:text-secondary/80 hover:underline;
+  }
+
+  .categories-grid, .authors-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+  }
+
+  .category-item, .author-item {
+    @apply bg-white rounded-lg p-6 text-center shadow-card transition-all hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  .category-link, .author-link {
+    @apply no-underline text-inherit;
+  }
+
+  .category-item h3, .author-item h3 {
+    @apply text-primary mb-2;
+  }
+
+  .book-count {
+    @apply text-secondary text-sm;
+  }
+
+  .stats {
+    @apply text-center text-secondary mt-8;
+  }
+
+  .no-results {
+    @apply text-center py-12 text-secondary;
+  }
+
+  .no-results p {
+    @apply text-lg;
+  }
+
+  .category-header, .author-header {
+    @apply text-center mb-8;
+  }
+
+  .category-header h1, .author-header h1 {
+    @apply text-primary mb-2;
+  }
+
+  .category-header p, .author-header p {
+    @apply text-secondary text-lg;
+  }
+
+  .main-nav {
+    @apply flex justify-between items-center py-4;
+  }
+
+  .nav-left {
+    @apply flex gap-4;
+  }
+
+  .nav-link {
+    @apply px-3 py-1.5 rounded-md text-sm transition-colors hover:bg-gray-100;
+  }
+
+  .nav-link.active {
+    @apply bg-primary text-white hover:bg-primary/90;
+  }
+
+  .bookshelf-link {
+    @apply text-primary no-underline hover:underline;
+  }
+
+  .search-section {
+    @apply mb-8;
+  }
+
+  .index-controls {
+    @apply flex justify-between items-center mb-8 gap-4;
+  }
+
+  .index-controls .search-box {
+    @apply mb-0 flex-1;
+  }
+}

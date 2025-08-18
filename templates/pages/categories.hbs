@@ -1,21 +1,21 @@
-<div class="index-controls">
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search categories...">
+<div class="flex justify-between items-center mb-8 gap-4">
+    <div class="flex-1">
+        <input type="text" id="searchInput" class="w-full px-3 py-2 border border-border rounded-lg bg-white shadow-card focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" placeholder="Search categories...">
     </div>
-    <div class="sort-controls">
-        <select id="sortBy">
+    <div>
+        <select id="sortBy" class="px-3 py-2 border border-border rounded-md bg-white shadow-card cursor-pointer appearance-none bg-no-repeat bg-right pr-8">
             <option value="count">Sort by Count</option>
             <option value="name">Sort by Name</option>
         </select>
     </div>
 </div>
 
-<div class="categories-grid" id="categoriesGrid">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="categoriesGrid">
     {{#each categories}}
-    <div class="category-item" data-category="{{name}}" data-count="{{count}}">
-        <a href="categories/{{slug}}.html" class="category-link">
-            <h3>{{name}}</h3>
-            <p class="book-count">{{count}} books</p>
+    <div class="bg-white rounded-lg p-6 text-center shadow-card transition-all hover:shadow-card-hover hover:-translate-y-0.5" data-category="{{name}}" data-count="{{count}}">
+        <a href="categories/{{slug}}.html" class="no-underline text-inherit">
+            <h3 class="text-primary mb-2">{{name}}</h3>
+            <p class="text-secondary text-sm">{{count}} books</p>
         </a>
     </div>
     {{/each}}

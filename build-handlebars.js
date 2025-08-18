@@ -91,10 +91,7 @@ const authorTemplate = loadTemplate(path.join(__dirname, 'templates', 'pages', '
 
 // Load CSS files
 const loadCSS = () => {
-    const baseCSS = fs.readFileSync(path.join(__dirname, 'templates', 'styles', 'base.css'), 'utf8');
-    const layoutCSS = fs.readFileSync(path.join(__dirname, 'templates', 'styles', 'layout.css'), 'utf8');
-    const componentsCSS = fs.readFileSync(path.join(__dirname, 'templates', 'styles', 'components.css'), 'utf8');
-    return baseCSS + '\n' + layoutCSS + '\n' + componentsCSS;
+    return fs.readFileSync(path.join(__dirname, 'templates', 'styles', 'tailwind.css'), 'utf8');
 };
 
 // Generate JavaScript

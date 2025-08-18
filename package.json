@@ -4,7 +4,9 @@
   "description": "A static website to browse, filter, and search through your book collection",
   "main": "index.js",
   "scripts": {
-    "build": "node build-handlebars.js",
+    "build:css": "npx tailwindcss -i ./templates/styles/tailwind.css -o ./dist/style.css",
+    "build:site": "node build-handlebars.js",
+    "build": "npm run build:site && npm run build:css",
     "build:old": "node build.js",
     "dev": "cd dist && python3 -m http.server 8000",
     "clean": "rm -rf dist"
@@ -18,7 +20,10 @@
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
-    "csv-parser": "^3.0.0"
+    "autoprefixer": "^10.4.16",
+    "csv-parser": "^3.0.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.3"
   },
   "dependencies": {
     "handlebars": "^4.7.8"

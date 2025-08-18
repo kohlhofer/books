@@ -1,13 +1,13 @@
-<header>
+<header class="bg-white border-b border-border">
     <div class="container">
-        <nav class="main-nav">
-            <div class="nav-left">
-                <a href="{{basePath}}categories.html" class="nav-link {{#if isCategories}}active{{/if}}">By Category</a>
-                <a href="{{basePath}}authors.html" class="nav-link {{#if isAuthors}}active{{/if}}">By Author</a>
-                <a href="{{basePath}}index.html" class="nav-link {{#if isIndex}}active{{/if}}">All Books</a>
+        <nav class="flex justify-between items-center py-4">
+            <div class="flex gap-4">
+                <a href="{{basePath}}categories.html" class="px-3 py-1.5 rounded-md text-sm transition-colors hover:bg-gray-100 {{#if isCategories}}bg-primary text-white hover:bg-primary/90{{/if}}">By Category</a>
+                <a href="{{basePath}}authors.html" class="px-3 py-1.5 rounded-md text-sm transition-colors hover:bg-gray-100 {{#if isAuthors}}bg-primary text-white hover:bg-primary/90{{/if}}">By Author</a>
+                <a href="{{basePath}}index.html" class="px-3 py-1.5 rounded-md text-sm transition-colors hover:bg-gray-100 {{#if isIndex}}bg-primary text-white hover:bg-primary/90{{/if}}">All Books</a>
             </div>
-            <div class="nav-right">
-                <a href="http://kohlhofer.com" class="bookshelf-link">A. Kohlhofer's bookshelf</a>
+            <div>
+                <a href="http://kohlhofer.com" class="text-primary no-underline hover:underline">A. Kohlhofer's bookshelf</a>
             </div>
         </nav>
     </div>
