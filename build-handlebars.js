@@ -216,18 +216,7 @@ async function build() {
         'books/library.csv',
         'books/kindle.csv', 
         'books/audible.csv',
-        'books/image1.csv',
-        'books/image2.csv',
-        'books/image3.csv',
-        'books/image4.csv',
-        'books/image5.csv',
-        'books/image6.csv',
-        'books/image7.csv',
-        'books/image8.csv',
-        'books/image9.csv',
-        'books/image10.csv',
-        'books/image11.csv',
-        'books/image12.csv'
+        'books/river.csv'
     ];
     
     for (const file of bookFiles) {
