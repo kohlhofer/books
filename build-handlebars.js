@@ -491,7 +491,7 @@ async function build() {
             books: categoryBooks,
             isCategories: true,
             basePath: '../',
-            assetPath: assetPath
+            assetPath: isProduction ? '/books/' : '../'
         };
         
         const categoryContent = mainLayout({
@@ -520,7 +520,7 @@ async function build() {
             books: authorBooks,
             isAuthors: true,
             basePath: '../',
-            assetPath: assetPath
+            assetPath: isProduction ? '/books/' : '../'
         };
         
         const authorContent = mainLayout({
