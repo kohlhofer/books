@@ -529,8 +529,26 @@ function generateAuthorsHTML(books) {
         authorGroups[author].push(book);
     });
     
-    // Sort authors alphabetically
-    const sortedAuthors = Object.keys(authorGroups).sort();
+    // Sort authors by last name, then first name
+    const sortedAuthors = Object.keys(authorGroups).sort((a, b) => {
+        // Split author names into first and last name
+        const aParts = a.trim().split(' ');
+        const bParts = b.trim().split(' ');
+        
+        const aLastName = aParts[aParts.length - 1] || '';
+        const bLastName = bParts[bParts.length - 1] || '';
+        const aFirstName = aParts.slice(0, -1).join(' ') || '';
+        const bFirstName = bParts.slice(0, -1).join(' ') || '';
+        
+        // First sort by last name
+        const lastNameComparison = aLastName.localeCompare(bLastName);
+        if (lastNameComparison !== 0) {
+            return lastNameComparison;
+        }
+        
+        // If last names are the same, sort by first name
+        return aFirstName.localeCompare(bFirstName);
+    });
     
     const authorsList = sortedAuthors.map(author => {
         const count = authorGroups[author].length;
@@ -624,11 +642,28 @@ function generateAuthorsHTML(books) {
                     return countB - countA; // Descending order (most books first)
                 });
             } else {
-                // Sort by name (alphabetical)
+                // Sort by name (last name, then first name)
                 filteredItems.sort((a, b) => {
-                    const nameA = a.dataset.author.toLowerCase();
-                    const nameB = b.dataset.author.toLowerCase();
-                    return nameA.localeCompare(nameB);
+                    const nameA = a.dataset.author.trim();
+                    const nameB = b.dataset.author.trim();
+                    
+                    // Split author names into first and last name
+                    const aParts = nameA.split(' ');
+                    const bParts = nameB.split(' ');
+                    
+                    const aLastName = aParts[aParts.length - 1] || '';
+                    const bLastName = bParts[bParts.length - 1] || '';
+                    const aFirstName = aParts.slice(0, -1).join(' ') || '';
+                    const bFirstName = bParts.slice(0, -1).join(' ') || '';
+                    
+                    // First sort by last name
+                    const lastNameComparison = aLastName.localeCompare(bLastName);
+                    if (lastNameComparison !== 0) {
+                        return lastNameComparison;
+                    }
+                    
+                    // If last names are the same, sort by first name
+                    return aFirstName.localeCompare(bFirstName);
                 });
             }
             
