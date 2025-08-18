@@ -3,7 +3,7 @@
         <input type="text" id="searchInput" class="w-full px-3 py-2 border border-border rounded-lg bg-white shadow-card focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10" placeholder="Search authors...">
     </div>
     <div>
-        <select id="sortBy" class="px-3 py-2 border border-border rounded-md bg-white shadow-card cursor-pointer appearance-none bg-no-repeat bg-right pr-8">
+        <select id="sortBy" class="px-3 py-2 border border-gray-200 rounded-lg bg-white cursor-pointer appearance-none bg-no-repeat bg-right pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors" style="background-image: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 24 24%27 stroke-width=%272%27 stroke=%27%239ca3af%27%3e%3cpath stroke-linecap=%27round%27 stroke-linejoin=%27round%27 d=%27m19 9-7 7-7-7%27/%3e%3c/svg%3e'); background-size: 16px 16px; background-position: right 12px center;">
             <option value="count">Sort by Count</option>
             <option value="name">Sort by Name</option>
         </select>
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function filterAndSortAuthors() {
         const searchTerm = searchInput.value.toLowerCase();
         const sortValue = sortBy.value;
-        const authorItems = Array.from(document.querySelectorAll('.author-item'));
+        const authorItems = Array.from(document.querySelectorAll('[data-author]'));
         
         // Filter authors
         authorItems.forEach(item => {
@@ -92,5 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (searchInput) searchInput.addEventListener('input', filterAndSortAuthors);
     if (sortBy) sortBy.addEventListener('change', filterAndSortAuthors);
+
+    // Initial render
+    filterAndSortAuthors();
 });
 </script>
