@@ -1,7 +1,6 @@
 FirstName,LastName,Title,Category,Language,Location,Type
 Alex,Gino,Melissa,Fiction,English,library,book
 Shaun,Hamill,The dissonance,Fiction,English,library,book
-Unknown,"The women who revolutionized fashion : 250 years of design",Design,English,library,book
 Stephenie,Meyer,Midnight sun,Fantasy,English,library,book
 Juliette,Arent,"Arent & Pyke : interiors beyond the primary palette",Design,English,library,book
 Susan,Sully,"The allure of Charleston : houses, rooms, and gardens",Design,English,library,book
@@ -10,7 +9,6 @@ Beata,Heuman,"Beata Heuman : every room should sing",Design,English,library,book
 Amber,Lewis,"Call it home : the details that matter",Design,English,library,book
 Justina,Blakeney,"Jungalow : decorate wild",Design,English,library,book
 Liza,Roberts,"Art of the state : celebrating the visual art of North Carolina",Art,English,library,book
-Unknown,"Design : the definitive visual guide",Design,English,library,book
 Chris,Mitchell,"Patina modern : a guide to designing warm, timeless interiors",Design,English,library,book
 Tui,Sutherland,The hive queen,Fantasy,English,library,book
 Tui,Sutherland,The poison jungle,Fantasy,English,library,book
@@ -211,7 +209,6 @@ B.A.,Hoena,Everything birds of prey,Children,English,library,book
 Neal,Stephenson,"Fall, or, Dodge in hell : a novel",Science Fiction,English,library,book
 J.K.,Rowling,Harry Potter and the Order of the Phoenix,Fantasy,English,library,book
 Thomas,Olde Heuvelt,Hex,Horror,English,library,book
-Unknown,Highlights high five magazine,Magazine,English,library,book
 Ludwig,Bemelmans,Madeline,Children,English,library,book
 Malka,Older,Null states,Science Fiction,English,library,book
 Hidenori,Kusaka,Pokemon. Volume 4 / XY.,Manga,Japanese,library,book
