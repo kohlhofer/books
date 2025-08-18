@@ -30,11 +30,23 @@
 }
 
 .filter-group select {
-    padding: 0.5rem;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
-    background: white;
+    background: white url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.5rem center/16px 16px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 0.9rem;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .sort-controls {
@@ -43,11 +55,23 @@
 }
 
 .sort-controls select {
-    padding: 0.5rem;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
-    background: white;
+    background: white url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.5rem center/16px 16px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 0.9rem;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.sort-controls select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* Index Controls (for categories/authors pages) */
@@ -70,8 +94,23 @@
 }
 
 .index-controls .sort-controls select {
-    background: white;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.5rem center/16px 16px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 0.9rem;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.index-controls .sort-controls select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* Books Grid */
