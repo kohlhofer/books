@@ -158,17 +158,21 @@ function sortBooks() {
                 bValue = b.querySelector('.book-title').textContent.toLowerCase();
                 break;
             case 'author':
-                aValue = a.querySelector('.book-author').textContent.toLowerCase();
-                bValue = b.querySelector('.book-author').textContent.toLowerCase();
+                // Extract author names from "by Author Name" format
+                const aAuthor = a.querySelector('.book-author').textContent.replace('by ', '').trim();
+                const bAuthor = b.querySelector('.book-author').textContent.replace('by ', '').trim();
+                // Split into first and last name
+                const [aFirst, ...aLast] = aAuthor.split(' ');
+                const [bFirst, ...bLast] = bAuthor.split(' ');
+                // Compare last names first, then first names
+                const aLastName = aLast.join(' ').toLowerCase();
+                const bLastName = bLast.join(' ').toLowerCase();
+                if (aLastName !== bLastName) {
+                    return aLastName.localeCompare(bLastName);
+                }
+                return aFirst.toLowerCase().localeCompare(bFirst.toLowerCase());
                 break;
-            case 'category':
-                aValue = a.querySelector('.book-category').textContent.toLowerCase();
-                bValue = b.querySelector('.book-category').textContent.toLowerCase();
-                break;
-            case 'location':
-                aValue = a.querySelector('.book-location').textContent.toLowerCase();
-                bValue = b.querySelector('.book-location').textContent.toLowerCase();
-                break;
+
             default:
                 return 0;
         }
