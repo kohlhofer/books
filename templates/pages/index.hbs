@@ -1,0 +1,11 @@
+{{> search-section}}
+
+<div class="books-grid">
+    {{#each books}}
+    {{> book-card}}
+    {{/each}}
+</div>
+
+<div class="stats">
+    <p>Showing <span id="filteredCount">{{books.length}}</span> of {{totalBooks}} books</p>
+</div>

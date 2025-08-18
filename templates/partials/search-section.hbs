@@ -1,0 +1,36 @@
+<div class="search-section">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search books by title, author, or category...">
+    </div>
+    <div class="filter-group">
+        <select id="categoryFilter">
+            <option value="">All Categories</option>
+            {{#each categories}}
+            <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
+        <select id="locationFilter">
+            <option value="">All Locations</option>
+            {{#each locations}}
+            <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
+        <select id="typeFilter">
+            <option value="">All Types</option>
+            {{#each types}}
+            <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="sort-controls">
+        <select id="sortBy">
+            <option value="title">Sort by Title</option>
+            <option value="author">Sort by Author</option>
+            <option value="category">Sort by Category</option>
+            <option value="location">Sort by Location</option>
+        </select>
+    </div>
+</div>
+<div id="noResults" class="no-results" style="display: none;">
+    <p>No books found matching your criteria.</p>
+</div>

@@ -1,0 +1,96 @@
+<div class="index-controls">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search authors...">
+    </div>
+    <div class="sort-controls">
+        <select id="sortBy">
+            <option value="count">Sort by Count</option>
+            <option value="name">Sort by Name</option>
+        </select>
+    </div>
+</div>
+
+<div class="authors-grid" id="authorsGrid">
+    {{#each authors}}
+    <div class="author-item" data-author="{{name}}" data-count="{{count}}">
+        <a href="authors/{{slug}}.html" class="author-link">
+            <h3>{{name}}</h3>
+            <p class="book-count">{{count}} books</p>
+        </a>
+    </div>
+    {{/each}}
+</div>
+
+<script>
+// Authors page functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const sortBy = document.getElementById('sortBy');
+    const authorsGrid = document.getElementById('authorsGrid');
+    
+    function filterAndSortAuthors() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const sortValue = sortBy.value;
+        const authorItems = Array.from(document.querySelectorAll('.author-item'));
+        
+        // Filter authors
+        authorItems.forEach(item => {
+            const authorName = item.querySelector('h3').textContent.toLowerCase();
+            const shouldShow = authorName.includes(searchTerm);
+            item.style.display = shouldShow ? 'block' : 'none';
+        });
+        
+        // Sort authors
+        const visibleItems = authorItems.filter(item => item.style.display !== 'none');
+        visibleItems.sort((a, b) => {
+            let aValue, bValue;
+            
+            switch (sortValue) {
+                case 'name':
+                    // Sort by last name, then first name
+                    const aName = a.querySelector('h3').textContent;
+                    const bName = b.querySelector('h3').textContent;
+                    
+                    const aParts = aName.split(' ');
+                    const bParts = bName.split(' ');
+                    
+                    const aLastName = aParts[aParts.length - 1] || '';
+                    const bLastName = bParts[bParts.length - 1] || '';
+                    const aFirstName = aParts[0] || '';
+                    const bFirstName = bParts[0] || '';
+                    
+                    // First compare by last name
+                    if (aLastName < bLastName) return -1;
+                    if (aLastName > bLastName) return 1;
+                    
+                    // If last names are equal, compare by first name
+                    if (aFirstName < bFirstName) return -1;
+                    if (aFirstName > bFirstName) return 1;
+                    
+                    return 0;
+                case 'count':
+                    aValue = parseInt(a.dataset.count);
+                    bValue = parseInt(b.dataset.count);
+                    // Sort descending (highest to lowest)
+                    if (aValue > bValue) return -1;
+                    if (aValue < bValue) return 1;
+                    return 0;
+                default:
+                    return 0;
+            }
+            
+            // Only apply default sorting for name (last name, then first name)
+            if (sortValue === 'name') {
+                // The name sorting logic is already handled above
+                return 0;
+            }
+        });
+        
+        // Reorder DOM elements
+        visibleItems.forEach(item => authorsGrid.appendChild(item));
+    }
+    
+    if (searchInput) searchInput.addEventListener('input', filterAndSortAuthors);
+    if (sortBy) sortBy.addEventListener('change', filterAndSortAuthors);
+});
+</script>

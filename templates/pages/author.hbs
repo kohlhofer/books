@@ -1,0 +1,23 @@
+<div class="author-header">
+    <h1>{{authorName}}</h1>
+    <p>{{books.length}} books by this author</p>
+</div>
+
+<div class="index-controls">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search books by {{authorName}}...">
+    </div>
+    <div class="sort-controls">
+        <select id="sortBy">
+            <option value="title">Sort by Title</option>
+            <option value="category">Sort by Category</option>
+            <option value="location">Sort by Location</option>
+        </select>
+    </div>
+</div>
+
+<div class="books-grid">
+    {{#each books}}
+    {{> book-card}}
+    {{/each}}
+</div>

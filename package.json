@@ -4,14 +4,23 @@
   "description": "A static website to browse, filter, and search through your book collection",
   "main": "index.js",
   "scripts": {
-    "build": "node build.js",
+    "build": "node build-handlebars.js",
+    "build:old": "node build.js",
     "dev": "cd dist && python3 -m http.server 8000",
     "clean": "rm -rf dist"
   },
-  "keywords": ["books", "library", "static-site", "github-pages"],
+  "keywords": [
+    "books",
+    "library",
+    "static-site",
+    "github-pages"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
     "csv-parser": "^3.0.0"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
   }
-} 
+}

@@ -1,0 +1,79 @@
+<div class="index-controls">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search categories...">
+    </div>
+    <div class="sort-controls">
+        <select id="sortBy">
+            <option value="count">Sort by Count</option>
+            <option value="name">Sort by Name</option>
+        </select>
+    </div>
+</div>
+
+<div class="categories-grid" id="categoriesGrid">
+    {{#each categories}}
+    <div class="category-item" data-category="{{name}}" data-count="{{count}}">
+        <a href="categories/{{slug}}.html" class="category-link">
+            <h3>{{name}}</h3>
+            <p class="book-count">{{count}} books</p>
+        </a>
+    </div>
+    {{/each}}
+</div>
+
+<script>
+// Categories page functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const sortBy = document.getElementById('sortBy');
+    const categoriesGrid = document.getElementById('categoriesGrid');
+    
+    function filterAndSortCategories() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const sortValue = sortBy.value;
+        const categoryItems = Array.from(document.querySelectorAll('.category-item'));
+        
+        // Filter categories
+        categoryItems.forEach(item => {
+            const categoryName = item.querySelector('h3').textContent.toLowerCase();
+            const shouldShow = categoryName.includes(searchTerm);
+            item.style.display = shouldShow ? 'block' : 'none';
+        });
+        
+        // Sort categories
+        const visibleItems = categoryItems.filter(item => item.style.display !== 'none');
+        visibleItems.sort((a, b) => {
+            let aValue, bValue;
+            
+            switch (sortValue) {
+                case 'name':
+                    aValue = a.querySelector('h3').textContent.toLowerCase();
+                    bValue = b.querySelector('h3').textContent.toLowerCase();
+                    break;
+                case 'count':
+                    aValue = parseInt(a.dataset.count);
+                    bValue = parseInt(b.dataset.count);
+                    // Sort descending (highest to lowest)
+                    if (aValue > bValue) return -1;
+                    if (aValue < bValue) return 1;
+                    return 0;
+                default:
+                    return 0;
+            }
+            
+            // Only apply default sorting for name (alphabetical)
+            if (sortValue === 'name') {
+                if (aValue < bValue) return -1;
+                if (aValue > bValue) return 1;
+                return 0;
+            }
+        });
+        
+        // Reorder DOM elements
+        visibleItems.forEach(item => categoriesGrid.appendChild(item));
+    }
+    
+    if (searchInput) searchInput.addEventListener('input', filterAndSortCategories);
+    if (sortBy) sortBy.addEventListener('change', filterAndSortCategories);
+});
+</script>
