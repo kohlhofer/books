@@ -486,7 +486,8 @@ async function build() {
         
         const categoryContent = mainLayout({
             ...categoryData,
-            body: categoryTemplate(categoryData)
+            body: categoryTemplate(categoryData),
+            includeScripts: true
         });
         
         const categorySlug = generateSlug(category);
@@ -513,7 +514,8 @@ async function build() {
         
         const authorContent = mainLayout({
             ...authorData,
-            body: authorTemplate(authorData)
+            body: authorTemplate(authorData),
+            includeScripts: true
         });
         
         const authorSlug = generateSlug(author);
