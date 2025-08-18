@@ -2,7 +2,7 @@
 
 <div class="books-grid">
     {{#each books}}
-    {{> book-card}}
+    {{> book-card this basePath=../basePath isAuthors=../isAuthors isCategories=../isCategories}}
     {{/each}}
 </div>
 

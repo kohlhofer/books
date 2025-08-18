@@ -404,6 +404,8 @@ async function build() {
         // Add slugs for linking
         book.authorSlug = generateSlug(book.author);
         book.categorySlug = generateSlug(book.category);
+        // Add basePath for linking
+        book.basePath = './';
     });
     
     // Generate index page
@@ -480,7 +482,10 @@ async function build() {
     }
     
     for (const category of categories) {
-        const categoryBooks = books.filter(book => book.category === category);
+        const categoryBooks = books.filter(book => book.category === category).map(book => ({
+            ...book,
+            basePath: '../'
+        }));
         const categoryData = {
             title: category,
             categoryName: category,
@@ -504,7 +509,10 @@ async function build() {
     }
     
     for (const author of Object.keys(authorCounts)) {
-        const authorBooks = books.filter(book => book.author === author);
+        const authorBooks = books.filter(book => book.author === author).map(book => ({
+            ...book,
+            basePath: '../'
+        }));
         const authorData = {
             title: author,
             authorName: author,
