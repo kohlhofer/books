@@ -2,6 +2,12 @@ const fs = require('fs');
 const path = require('path');
 const Handlebars = require('handlebars');
 
+// Check if we're building for production (subdirectory deployment)
+const isProduction = process.env.NODE_ENV === 'production' || process.env.BUILD_ENV === 'production';
+const assetPath = isProduction ? '/books/' : './';
+
+console.log(`Building for ${isProduction ? 'production' : 'development'} with asset path: ${assetPath}`);
+
 // Register partials
 const partialsDir = path.join(__dirname, 'templates', 'partials');
 const partialFiles = fs.readdirSync(partialsDir);
@@ -408,7 +414,7 @@ async function build() {
         locations: locations,
         isIndex: true,
         basePath: './',
-        assetPath: '/books/'
+        assetPath: assetPath
     };
     
     const indexContent = mainLayout({
@@ -434,7 +440,7 @@ async function build() {
         })).sort((a, b) => b.count - a.count),
         isCategories: true,
         basePath: './',
-        assetPath: '/books/'
+        assetPath: assetPath
     };
     
     const categoriesContent = mainLayout({
@@ -459,7 +465,7 @@ async function build() {
         })).sort((a, b) => b.count - a.count),
         isAuthors: true,
         basePath: './',
-        assetPath: '/books/'
+        assetPath: assetPath
     };
     
     const authorsContent = mainLayout({
@@ -485,7 +491,7 @@ async function build() {
             books: categoryBooks,
             isCategories: true,
             basePath: '../',
-            assetPath: '/books/'
+            assetPath: assetPath
         };
         
         const categoryContent = mainLayout({
@@ -514,7 +520,7 @@ async function build() {
             books: authorBooks,
             isAuthors: true,
             basePath: '../',
-            assetPath: '/books/'
+            assetPath: assetPath
         };
         
         const authorContent = mainLayout({

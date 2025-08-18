@@ -4,10 +4,10 @@
   "description": "A static website to browse, filter, and search through your book collection",
   "main": "index.js",
   "scripts": {
-    "build:css": "npx tailwindcss -i ./templates/styles/tailwind.css -o ./dist/style.css",
-    "build:site": "node build-handlebars.js",
     "build": "npm run build:site && npm run build:css",
-    "build:old": "node build.js",
+    "build:site": "node build-handlebars.js",
+    "build:css": "npx tailwindcss -i ./templates/styles/tailwind.css -o ./dist/style.css",
+    "build:prod": "BUILD_ENV=production npm run build:site && npm run build:css",
     "dev": "cd dist && python3 -m http.server 8000",
     "clean": "rm -rf dist"
   },
