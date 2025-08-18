@@ -414,7 +414,8 @@ async function build() {
         categories: categories,
         types: types,
         locations: locations,
-        isIndex: true
+        isIndex: true,
+        basePath: './'
     };
     
     const indexContent = mainLayout({
@@ -438,7 +439,8 @@ async function build() {
             count,
             slug: generateSlug(name)
         })).sort((a, b) => b.count - a.count),
-        isCategories: true
+        isCategories: true,
+        basePath: './'
     };
     
     const categoriesContent = mainLayout({
@@ -461,7 +463,8 @@ async function build() {
             count,
             slug: generateSlug(name)
         })).sort((a, b) => b.count - a.count),
-        isAuthors: true
+        isAuthors: true,
+        basePath: './'
     };
     
     const authorsContent = mainLayout({
@@ -482,7 +485,8 @@ async function build() {
             title: category,
             categoryName: category,
             books: categoryBooks,
-            isCategories: true
+            isCategories: true,
+            basePath: '../'
         };
         
         const categoryContent = mainLayout({
@@ -505,7 +509,8 @@ async function build() {
             title: author,
             authorName: author,
             books: authorBooks,
-            isAuthors: true
+            isAuthors: true,
+            basePath: '../'
         };
         
         const authorContent = mainLayout({
