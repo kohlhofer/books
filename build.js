@@ -438,12 +438,15 @@ function generateHTML(books, categories, languages, locations, types) {
 <body>
     <header>
         <div class="container">
-            <h1>📚 Book Shelf</h1>
-            <p>Your Personal Library Collection</p>
             <nav class="main-nav">
-                <a href="index.html" class="nav-link active">All Books</a>
-                <a href="authors.html" class="nav-link">Authors</a>
-                <a href="categories.html" class="nav-link">Categories</a>
+                <div class="nav-left">
+                    <a href="categories.html" class="nav-link">By Category</a>
+                    <a href="authors.html" class="nav-link">By Author</a>
+                    <a href="index.html" class="nav-link active">All Books</a>
+                </div>
+                <div class="nav-right">
+                    <a href="http://kohlhofer.com" class="bookshelf-link">A. Kohlhofer's bookshelf</a>
+                </div>
             </nav>
         </div>
     </header>
@@ -572,39 +575,39 @@ function generateAuthorsHTML(books) {
 <body>
     <header>
         <div class="container">
-            <h1>📚 Book Shelf</h1>
-            <p>Browse Books by Author</p>
             <nav class="main-nav">
-                <a href="index.html" class="nav-link">All Books</a>
-                <a href="authors.html" class="nav-link active">Authors</a>
-                <a href="categories.html" class="nav-link">Categories</a>
+                <div class="nav-left">
+                    <a href="categories.html" class="nav-link">By Category</a>
+                    <a href="authors.html" class="nav-link active">By Author</a>
+                    <a href="index.html" class="nav-link">All Books</a>
+                </div>
+                <div class="nav-right">
+                    <a href="http://kohlhofer.com" class="bookshelf-link">A. Kohlhofer's bookshelf</a>
+                </div>
             </nav>
         </div>
     </header>
     
     <main class="container">
-        <div class="index-section">
-            <div class="index-controls">
-                <div class="search-box">
-                    <input type="text" id="authorSearch" placeholder="Search authors...">
-                </div>
-                <div class="sort-controls">
-                    <label for="sortSelect">Sort by:</label>
-                    <select id="sortSelect">
-                        <option value="name">Author Name</option>
-                        <option value="count">Number of Books</option>
-                    </select>
-                </div>
+        <div class="index-controls">
+            <div class="search-box">
+                <input type="text" id="authorSearch" placeholder="Search authors...">
             </div>
-            
-            <h2>Authors (${sortedAuthors.length})</h2>
-            <div class="index-grid" id="authorsGrid">
-                ${authorsList}
+            <div class="sort-controls">
+                <label for="sortSelect">Sort by:</label>
+                <select id="sortSelect">
+                    <option value="name">Author Name</option>
+                    <option value="count">Number of Books</option>
+                </select>
             </div>
-            
-            <div id="noResults" class="no-results" style="display: none;">
-                <p>No authors found matching your search.</p>
-            </div>
+        </div>
+        
+        <div class="index-grid" id="authorsGrid">
+            ${authorsList}
+        </div>
+        
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>No authors found matching your search.</p>
         </div>
     </main>
     
@@ -730,39 +733,39 @@ function generateCategoriesHTML(books) {
 <body>
     <header>
         <div class="container">
-            <h1>📚 Book Shelf</h1>
-            <p>Browse Books by Category</p>
             <nav class="main-nav">
-                <a href="index.html" class="nav-link">All Books</a>
-                <a href="authors.html" class="nav-link">Authors</a>
-                <a href="categories.html" class="nav-link active">Categories</a>
+                <div class="nav-left">
+                    <a href="categories.html" class="nav-link active">By Category</a>
+                    <a href="authors.html" class="nav-link">By Author</a>
+                    <a href="index.html" class="nav-link">All Books</a>
+                </div>
+                <div class="nav-right">
+                    <a href="http://kohlhofer.com" class="bookshelf-link">A. Kohlhofer's bookshelf</a>
+                </div>
             </nav>
         </div>
     </header>
     
     <main class="container">
-        <div class="index-section">
-            <div class="index-controls">
-                <div class="search-box">
-                    <input type="text" id="categorySearch" placeholder="Search categories...">
-                </div>
-                <div class="sort-controls">
-                    <label for="sortSelect">Sort by:</label>
-                    <select id="sortSelect">
-                        <option value="name">Category Name</option>
-                        <option value="count">Number of Books</option>
-                    </select>
-                </div>
+        <div class="index-controls">
+            <div class="search-box">
+                <input type="text" id="categorySearch" placeholder="Search categories...">
             </div>
-            
-            <h2>Categories (${sortedCategories.length})</h2>
-            <div class="index-grid" id="categoriesGrid">
-                ${categoriesList}
+            <div class="sort-controls">
+                <label for="sortSelect">Sort by:</label>
+                <select id="sortSelect">
+                    <option value="name">Category Name</option>
+                    <option value="count">Number of Books</option>
+                </select>
             </div>
-            
-            <div id="noResults" class="no-results" style="display: none;">
-                <p>No categories found matching your search.</p>
-            </div>
+        </div>
+        
+        <div class="index-grid" id="categoriesGrid">
+            ${categoriesList}
+        </div>
+        
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>No categories found matching your search.</p>
         </div>
     </main>
     
@@ -861,12 +864,15 @@ function generateAuthorPage(author, authorBooks, allBooks) {
 <body>
     <header>
         <div class="container">
-            <h1>📚 Book Shelf</h1>
-            <p>Books by ${escapeHtml(author)}</p>
             <nav class="main-nav">
-                <a href="../index.html" class="nav-link">All Books</a>
-                <a href="../authors.html" class="nav-link active">Authors</a>
-                <a href="../categories.html" class="nav-link">Categories</a>
+                <div class="nav-left">
+                    <a href="../categories.html" class="nav-link">By Category</a>
+                    <a href="../authors.html" class="nav-link active">By Author</a>
+                    <a href="../index.html" class="nav-link">All Books</a>
+                </div>
+                <div class="nav-right">
+                    <a href="http://kohlhofer.com" class="bookshelf-link">A. Kohlhofer's bookshelf</a>
+                </div>
             </nav>
         </div>
     </header>
@@ -919,12 +925,15 @@ function generateCategoryPage(category, categoryBooks, allBooks) {
 <body>
     <header>
         <div class="container">
-            <h1>📚 Book Shelf</h1>
-            <p>Books in ${escapeHtml(category)}</p>
             <nav class="main-nav">
-                <a href="../index.html" class="nav-link">All Books</a>
-                <a href="../authors.html" class="nav-link">Authors</a>
-                <a href="../categories.html" class="nav-link active">Categories</a>
+                <div class="nav-left">
+                    <a href="../categories.html" class="nav-link active">By Category</a>
+                    <a href="../authors.html" class="nav-link">By Author</a>
+                    <a href="../index.html" class="nav-link">All Books</a>
+                </div>
+                <div class="nav-right">
+                    <a href="http://kohlhofer.com" class="bookshelf-link">A. Kohlhofer's bookshelf</a>
+                </div>
             </nav>
         </div>
     </header>
@@ -1041,7 +1050,9 @@ function displayBooks(books) {
     allCards.forEach(card => {
         const title = card.querySelector('.book-title').textContent;
         const author = card.querySelector('.book-author a').textContent;
-        const category = card.querySelector('.meta-item.category').textContent;
+        const categoryText = card.querySelector('.meta-item.category').textContent;
+        // Extract just the category name without the count in parentheses
+        const category = categoryText.replace(/\\s*\\(\\d+\\)$/, '');
         
         // Check if this card matches the current filter
         const matchesSearch = !searchInput.value.toLowerCase() || 
@@ -1063,12 +1074,12 @@ function displayBooks(books) {
     updateStats(visibleCards.length);
 }
 
-function updateStats(filteredCount) {
+function updateStats(count) {
     const total = allBooks.length;
-    if (filteredCount === total) {
+    if (count === total) {
         filteredCount.textContent = '';
     } else {
-        filteredCount.textContent = \` | Showing: \${filteredCount} books\`;
+        filteredCount.textContent = \` | Showing: \${count} books\`;
     }
 }
 
@@ -1106,8 +1117,7 @@ body {
 header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 3rem 0;
-    text-align: center;
+    padding: 1rem 0;
     margin-bottom: 2rem;
 }
 
@@ -1124,19 +1134,46 @@ header p {
 
 /* Navigation */
 .main-nav {
-    margin-top: 1.5rem;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
+}
+
+.nav-left {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.bookshelf-link {
+    color: white;
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.bookshelf-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
 }
 
 .nav-link {
     color: white;
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
     transition: all 0.3s ease;
     font-weight: 500;
+    font-size: 14px;
 }
 
 .nav-link:hover {
@@ -1151,10 +1188,6 @@ header p {
 
 /* Search Section */
 .search-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-bottom: 2rem;
 }
 
@@ -1170,12 +1203,15 @@ header p {
     border: 2px solid #e1e5e9;
     border-radius: 8px;
     font-size: 16px;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .search-box input:focus {
     outline: none;
     border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .search-box button {
@@ -1214,11 +1250,19 @@ header p {
 }
 
 .filter-group select {
-    padding: 8px 12px;
-    border: 1px solid #e1e5e9;
-    border-radius: 6px;
+    padding: 10px 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
     font-size: 14px;
     background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .clear-btn {
@@ -1391,22 +1435,6 @@ footer {
 }
 
 /* Index Pages */
-.index-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
-}
-
-.index-section h2 {
-    color: #2c3e50;
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-    border-bottom: 2px solid #667eea;
-    padding-bottom: 0.5rem;
-}
-
 .index-controls {
     display: flex;
     justify-content: space-between;
@@ -1419,26 +1447,36 @@ footer {
 .index-controls .search-box {
     flex: 1;
     min-width: 250px;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .index-controls .search-box input {
     width: 100%;
-    padding: 10px 16px;
-    border: 2px solid #e1e5e9;
-    border-radius: 8px;
+    padding: 0;
+    border: none;
     font-size: 16px;
-    transition: border-color 0.3s ease;
+    background: transparent;
+    outline: none;
 }
 
-.index-controls .search-box input:focus {
-    outline: none;
+.index-controls .search-box:focus-within {
     border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .sort-controls {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .sort-controls label {
@@ -1446,21 +1484,22 @@ footer {
     font-size: 14px;
     color: #555;
     white-space: nowrap;
+    margin: 0;
 }
 
 .sort-controls select {
-    padding: 8px 12px;
-    border: 2px solid #e1e5e9;
-    border-radius: 6px;
+    padding: 0;
+    border: none;
     font-size: 14px;
-    background: white;
+    background: transparent;
     cursor: pointer;
-    transition: border-color 0.3s ease;
+    outline: none;
+    color: #333;
 }
 
-.sort-controls select:focus {
-    outline: none;
+.sort-controls:focus-within {
     border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .index-grid {
@@ -1470,12 +1509,453 @@ footer {
 }
 
 .index-item {
-    background: #f8f9fa;
+    background: white;
     padding: 1rem;
     border-radius: 8px;
     border: 1px solid #e9ecef;
     transition: all 0.3s ease;
     cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.index-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.index-item h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.index-item .count {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.index-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Index Pages */
+.index-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.index-controls .search-box {
+    flex: 1;
+    min-width: 250px;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.index-controls .search-box input {
+    width: 100%;
+    padding: 0;
+    border: none;
+    font-size: 16px;
+    background: transparent;
+    outline: none;
+}
+
+.index-controls .search-box:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sort-controls label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.sort-controls select {
+    padding: 0;
+    border: none;
+    font-size: 14px;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    color: #333;
+}
+
+.sort-controls:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.index-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.index-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.index-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.index-item h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.index-item .count {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.index-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Index Pages */
+.index-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.index-controls .search-box {
+    flex: 1;
+    min-width: 250px;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.index-controls .search-box input {
+    width: 100%;
+    padding: 0;
+    border: none;
+    font-size: 16px;
+    background: transparent;
+    outline: none;
+}
+
+.index-controls .search-box:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sort-controls label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.sort-controls select {
+    padding: 0;
+    border: none;
+    font-size: 14px;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    color: #333;
+}
+
+.sort-controls:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.index-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.index-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.index-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.index-item h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.index-item .count {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.index-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Index Pages */
+.index-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.index-controls .search-box {
+    flex: 1;
+    min-width: 250px;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.index-controls .search-box input {
+    width: 100%;
+    padding: 0;
+    border: none;
+    font-size: 16px;
+    background: transparent;
+    outline: none;
+}
+
+.index-controls .search-box:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sort-controls label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.sort-controls select {
+    padding: 0;
+    border: none;
+    font-size: 14px;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    color: #333;
+}
+
+.sort-controls:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.index-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.index-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.index-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.index-item h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.index-item .count {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.index-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Index Pages */
+.index-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.index-controls .search-box {
+    flex: 1;
+    min-width: 250px;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.index-controls .search-box input {
+    width: 100%;
+    padding: 0;
+    border: none;
+    font-size: 16px;
+    background: transparent;
+    outline: none;
+}
+
+.index-controls .search-box:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sort-controls label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.sort-controls select {
+    padding: 0;
+    border: none;
+    font-size: 14px;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    color: #333;
+}
+
+.sort-controls:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.index-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.index-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .index-item:hover {
@@ -1545,8 +2025,8 @@ footer {
         padding: 0 15px;
     }
     
-    header h1 {
-        font-size: 2rem;
+    header {
+        padding: 0.75rem 0;
     }
     
     .search-box {
@@ -1577,6 +2057,107 @@ footer {
     
     .main-nav {
         flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+    }
+    
+    .nav-left {
+        gap: 0.5rem;
+    }
+    
+    .index-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .index-controls .search-box {
+        min-width: auto;
+    }
+    
+    .sort-controls {
+        justify-content: center;
+    }
+}
+
+.author-header, .category-header {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.author-header h2, .category-header h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.book-count {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.back-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.back-link:hover {
+    background: #5a6fd8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    header {
+        padding: 0.75rem 0;
+    }
+    
+    .search-box {
+        flex-direction: column;
+    }
+    
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .clear-btn {
+        margin-left: 0;
+    }
+    
+    .books-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .index-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-nav {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+    }
+    
+    .nav-left {
         gap: 0.5rem;
     }
     

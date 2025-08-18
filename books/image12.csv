@@ -1,6 +1,6 @@
 FirstName,LastName,Title,Category,Language,Location,Type
-Michael,Crichton,Micro,Science Fiction/Thriller,English,River House,book
-Michael,Crichton,The Lost World,Science Fiction/Thriller,English,River House,book
+Michael,Crichton,Micro,Science Fiction,English,River House,book
+Michael,Crichton,The Lost World,Science Fiction,English,River House,book
 Rick,Riordan,The Lightning Thief,Fantasy,English,River House,book
 Anne,McCaffrey,Dragondrums,Fantasy,English,River House,book
 Orson Scott,Card,Ender's Game,Science Fiction,English,River House,book
@@ -9,6 +9,6 @@ Larry,Niven,Limits,Science Fiction,English,River House,book
 Iain M.,Banks,Against a Dark Background,Science Fiction,English,River House,book
 Arthur C.,Clarke,Childhood's End,Science Fiction,English,River House,book
 John,Steinbeck,The Short Novels of John Steinbeck,Classic,English,River House,book
-Jorge Luis,Borges,Ficciones,Classic/Fantasy,English,River House,book
+Jorge Luis,Borges,Ficciones,Science Fiction,English,River House,book
 Duong Thu,Huong,Paradise of the Blind,Fiction,English,River House,book
 Elie,Wiesel,Night,Memoir,English,River House,book
