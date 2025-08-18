@@ -104,15 +104,15 @@ function displayBooks() {
     const typeFilter = document.getElementById('typeFilter').value;
     const sortBy = document.getElementById('sortBy').value;
     
-    const bookCards = document.querySelectorAll('.book-card');
+    const bookCards = Array.from(document.querySelectorAll('[data-category]')); // Using data attributes
     let visibleCount = 0;
     
     bookCards.forEach(card => {
-        const title = card.querySelector('.book-title').textContent.toLowerCase();
-        const author = card.querySelector('.book-author').textContent.toLowerCase();
-        const category = card.querySelector('.book-category').textContent;
-        const location = card.querySelector('.book-location').textContent;
-        const type = card.querySelector('.book-type').textContent;
+        const title = card.querySelector('h3').textContent.toLowerCase(); // Title is in h3
+        const author = card.querySelector('p').textContent.toLowerCase(); // Author is in first p
+        const category = card.dataset.category;
+        const location = card.dataset.location;
+        const type = card.dataset.type;
         
         const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm) || category.toLowerCase().includes(searchTerm);
         const matchesCategory = !categoryFilter || category === categoryFilter;
@@ -143,21 +143,21 @@ function updateStats(count) {
 
 function sortBooks() {
     const sortBy = document.getElementById('sortBy').value;
-    const bookCards = Array.from(document.querySelectorAll('.book-card'));
-    const booksGrid = document.querySelector('.books-grid');
+    const bookCards = Array.from(document.querySelectorAll('[data-category]'));
+    const booksGrid = document.querySelector('.grid');
     
     bookCards.sort((a, b) => {
         let aValue, bValue;
         
         switch (sortBy) {
             case 'title':
-                aValue = a.querySelector('.book-title').textContent.toLowerCase();
-                bValue = b.querySelector('.book-title').textContent.toLowerCase();
+                aValue = a.querySelector('h3').textContent.toLowerCase();
+                bValue = b.querySelector('h3').textContent.toLowerCase();
                 break;
             case 'author':
                 // Extract author names from "by Author Name" format
-                const aAuthor = a.querySelector('.book-author').textContent.replace('by ', '').trim();
-                const bAuthor = b.querySelector('.book-author').textContent.replace('by ', '').trim();
+                const aAuthor = a.querySelector('p').textContent.replace('by ', '').trim();
+                const bAuthor = b.querySelector('p').textContent.replace('by ', '').trim();
                 // Split into first and last name
                 const [aFirst, ...aLast] = aAuthor.split(' ');
                 const [bFirst, ...bLast] = bAuthor.split(' ');
