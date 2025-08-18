@@ -5,7 +5,7 @@
     </div>
     <div class="book-info">
         <h3 class="book-title">{{title}}</h3>
-        <p class="book-author">by <a href="{{#if isCategories}}../authors/{{authorSlug}}.html{{else if isAuthors}}../authors/{{authorSlug}}.html{{else}}./authors/{{authorSlug}}.html{{/if}}">{{firstName}} {{lastName}}</a></p>
-        <p class="book-category"><a href="{{#if isAuthors}}../categories/{{categorySlug}}.html{{else if isCategories}}../categories/{{categorySlug}}.html{{else}}./categories/{{categorySlug}}.html{{/if}}">{{category}}</a></p>
+        <p class="book-author">by <a href="{{#if isCategories}}../authors/{{authorSlug}}.html{{else}}./authors/{{authorSlug}}.html{{/if}}">{{firstName}} {{lastName}}</a></p>
+        <p class="book-category"><a href="{{#if isAuthors}}../categories/{{categorySlug}}.html{{else}}./categories/{{categorySlug}}.html{{/if}}">{{category}}</a></p>
     </div>
 </div>
