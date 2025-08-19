@@ -222,26 +222,26 @@ document.addEventListener('DOMContentLoaded', function() {
 };
 
 // Color palette for categories (will be assigned dynamically)
-const colorPalette = [
-    { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', accent: 'bg-blue-100', dark: 'bg-blue-700', darkText: 'text-white' },
-    { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', accent: 'bg-green-100', dark: 'bg-green-700', darkText: 'text-white' },
-    { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', accent: 'bg-purple-100', dark: 'bg-purple-700', darkText: 'text-white' },
-    { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-200', accent: 'bg-indigo-100', dark: 'bg-indigo-700', darkText: 'text-white' },
-    { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', accent: 'bg-red-100', dark: 'bg-red-700', darkText: 'text-white' },
-    { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', accent: 'bg-pink-100', dark: 'bg-pink-700', darkText: 'text-white' },
-    { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', accent: 'bg-orange-100', dark: 'bg-orange-700', darkText: 'text-white' },
-    { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', accent: 'bg-amber-100', dark: 'bg-amber-700', darkText: 'text-white' },
-    { bg: 'bg-stone-50', text: 'text-stone-700', border: 'border-stone-200', accent: 'bg-stone-100', dark: 'bg-stone-700', darkText: 'text-white' },
-    { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', accent: 'bg-slate-100', dark: 'bg-slate-700', darkText: 'text-white' },
-    { bg: 'bg-teal-50', text: 'text-teal-700', border: 'border-teal-200', accent: 'bg-teal-100', dark: 'bg-teal-700', darkText: 'text-white' },
-    { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', accent: 'bg-emerald-100', dark: 'bg-emerald-700', darkText: 'text-white' },
-    { bg: 'bg-cyan-50', text: 'text-cyan-700', border: 'border-cyan-200', accent: 'bg-cyan-100', dark: 'bg-cyan-700', darkText: 'text-white' },
-    { bg: 'bg-fuchsia-50', text: 'text-fuchsia-700', border: 'border-fuchsia-200', accent: 'bg-fuchsia-100', dark: 'bg-fuchsia-700', darkText: 'text-white' },
-    { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', accent: 'bg-rose-100', dark: 'bg-rose-700', darkText: 'text-white' },
-    { bg: 'bg-violet-50', text: 'text-violet-700', border: 'border-violet-200', accent: 'bg-violet-100', dark: 'bg-violet-700', darkText: 'text-white' },
-    { bg: 'bg-lime-50', text: 'text-lime-700', border: 'border-lime-200', accent: 'bg-lime-100', dark: 'bg-lime-700', darkText: 'text-white' },
-    { bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200', accent: 'bg-sky-100', dark: 'bg-sky-700', darkText: 'text-white' }
-];
+    const colorPalette = [
+        { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe', accent: '#dbeafe', dark: '#1d4ed8', darkText: '#ffffff' },
+        { bg: '#f0fdf4', text: '#15803d', border: '#bbf7d0', accent: '#dcfce7', dark: '#15803d', darkText: '#ffffff' },
+        { bg: '#faf5ff', text: '#7c3aed', border: '#c4b5fd', accent: '#ddd6fe', dark: '#7c3aed', darkText: '#ffffff' },
+        { bg: '#eef2ff', text: '#4338ca', border: '#c7d2fe', accent: '#dbeafe', dark: '#4338ca', darkText: '#ffffff' },
+        { bg: '#fef2f2', text: '#b91c1c', border: '#fecaca', accent: '#fee2e2', dark: '#b91c1c', darkText: '#ffffff' },
+        { bg: '#fdf2f8', text: '#be185d', border: '#f9a8d4', accent: '#fce7f3', dark: '#be185d', darkText: '#ffffff' },
+        { bg: '#fff7ed', text: '#c2410c', border: '#fed7aa', accent: '#ffedd5', dark: '#c2410c', darkText: '#ffffff' },
+        { bg: '#fffbeb', text: '#d97706', border: '#fde68a', accent: '#fef3c7', dark: '#d97706', darkText: '#ffffff' },
+        { bg: '#fafaf9', text: '#44403c', border: '#e7e5e4', accent: '#f5f5f4', dark: '#44403c', darkText: '#ffffff' },
+        { bg: '#f8fafc', text: '#334155', border: '#cbd5e1', accent: '#e2e8f0', dark: '#334155', darkText: '#ffffff' },
+        { bg: '#f0fdfa', text: '#0f766e', border: '#99f6e4', accent: '#ccfbf1', dark: '#0f766e', darkText: '#ffffff' },
+        { bg: '#ecfdf5', text: '#047857', border: '#86efac', accent: '#bbf7d0', dark: '#047857', darkText: '#ffffff' },
+        { bg: '#ecfeff', text: '#0891b2', border: '#67e8f9', accent: '#a5f3fc', dark: '#0891b2', darkText: '#ffffff' },
+        { bg: '#fdf4ff', text: '#a21caf', border: '#e879f9', accent: '#f0abfc', dark: '#a21caf', darkText: '#ffffff' },
+        { bg: '#fff1f2', text: '#be123c', border: '#fda4af', accent: '#fecdd3', dark: '#be123c', darkText: '#ffffff' },
+        { bg: '#f5f3ff', text: '#6d28d9', border: '#c4b5fd', accent: '#ddd6fe', dark: '#6d28d9', darkText: '#ffffff' },
+        { bg: '#f7fee7', text: '#65a30d', border: '#bef264', accent: '#d9f99d', dark: '#65a30d', darkText: '#ffffff' },
+        { bg: '#f0f9ff', text: '#0369a1', border: '#7dd3fc', accent: '#bae6fd', dark: '#0369a1', darkText: '#ffffff' }
+    ];
 
 // Default color for unknown categories
 const defaultCategoryColor = { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', accent: 'bg-gray-100', dark: 'bg-gray-700', darkText: 'text-white' };

@@ -1,23 +1,23 @@
 <div class="bg-white rounded-md overflow-hidden shadow-card transition-all hover:shadow-card-hover hover:-translate-y-0.5 flex flex-col" data-category="{{category}}" data-author="{{author}}" data-type="{{type}}" data-location="{{location}}" data-title="{{title}}">
     <!-- Top strip with category and type -->
-    <div class="flex justify-between items-center px-4 py-2 {{categoryDark}} border-b {{categoryBorder}}">
+    <div class="flex justify-between items-center px-4 py-2 border-b" style="background-color: {{categoryDark}}; border-color: {{categoryBorder}};">
         <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 {{categoryDarkText}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: {{categoryDarkText}};">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
             </svg>
-            <a href="{{#if isCategories}}../categories/{{categorySlug}}.html{{else if isAuthors}}../categories/{{categorySlug}}.html{{else}}./categories/{{categorySlug}}.html{{/if}}" class="no-underline transition-colors hover:opacity-80 {{categoryDarkText}} font-medium text-xs uppercase tracking-wider">{{category}}</a>
+            <a href="{{#if isCategories}}../categories/{{categorySlug}}.html{{else if isAuthors}}../categories/{{categorySlug}}.html{{else}}./categories/{{categorySlug}}.html{{/if}}" class="no-underline transition-colors hover:opacity-80 font-medium text-xs uppercase tracking-wider" style="color: {{categoryDarkText}};">{{category}}</a>
         </div>
         <div class="flex items-center gap-1">
             {{#if (eq type "Audiobook")}}
-            <svg class="w-4 h-4 {{categoryDarkText}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: {{categoryDarkText}};">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
             </svg>
             {{else}}
-            <svg class="w-4 h-4 {{categoryDarkText}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: {{categoryDarkText}};">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
             {{/if}}
-            <span class="{{categoryDarkText}} text-xs font-normal">{{type}}</span>
+            <span class="text-xs font-normal" style="color: {{categoryDarkText}};">{{type}}</span>
         </div>
     </div>
     
