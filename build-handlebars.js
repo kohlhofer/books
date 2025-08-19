@@ -451,6 +451,25 @@ async function build() {
     const types = [...new Set(books.map(book => book.type).filter(Boolean))].sort();
     const locations = [...new Set(books.map(book => book.location).filter(Boolean))].sort();
     
+    // Count books per category and assign colors BEFORE processing books
+    const categoryCounts = {};
+    books.forEach(book => {
+        categoryCounts[book.category] = (categoryCounts[book.category] || 0) + 1;
+    });
+    
+    // Sort categories by book count (descending) and assign colors
+    const sortedCategories = Object.entries(categoryCounts)
+        .sort((a, b) => b[1] - a[1]) // Sort by count descending
+        .map(([name, count]) => ({ name, count }));
+    
+    // Assign colors to categories based on book count order
+    sortedCategories.forEach((category, index) => {
+        const colorIndex = index % colorPalette.length; // Loop through colors if more categories than colors
+        categoryColorMap[category.name] = colorPalette[colorIndex];
+    });
+    
+    console.log(`Assigned colors to ${sortedCategories.length} categories`);
+    
     // Add author field for display and processing
     books.forEach(book => {
         book.author = `${book.firstName} ${book.lastName}`;
@@ -460,7 +479,7 @@ async function build() {
         // Add basePath for linking
         book.basePath = './';
         
-        // Add category colors
+        // Add category colors (now available from categoryColorMap)
         const categoryColors = getCategoryColors(book.category);
         book.categoryBg = categoryColors.bg;
         book.categoryText = categoryColors.text;
@@ -492,31 +511,23 @@ async function build() {
     fs.writeFileSync('./dist/index.html', indexContent);
     
     // Generate categories page
-    const categoryCounts = {};
-    books.forEach(book => {
-        categoryCounts[book.category] = (categoryCounts[book.category] || 0) + 1;
-    });
-    
-    // Sort categories by book count (descending) and assign colors
-    const sortedCategories = Object.entries(categoryCounts)
-        .sort((a, b) => b[1] - a[1]) // Sort by count descending
-        .map(([name, count]) => ({ name, count }));
-    
-    // Assign colors to categories based on book count order
-    sortedCategories.forEach((category, index) => {
-        const colorIndex = index % colorPalette.length; // Loop through colors if more categories than colors
-        categoryColorMap[category.name] = colorPalette[colorIndex];
-    });
-    
-    console.log(`Assigned colors to ${sortedCategories.length} categories`);
-    
     const categoriesData = {
         title: 'By Category',
-        categories: sortedCategories.map(category => ({
-            name: category.name,
-            count: category.count,
-            slug: generateSlug(category.name)
-        })),
+        categories: sortedCategories.map(category => {
+            const categoryColors = getCategoryColors(category.name);
+            return {
+                name: category.name,
+                count: category.count,
+                slug: generateSlug(category.name),
+                // Pass category colors to the template
+                categoryBg: categoryColors.bg,
+                categoryText: categoryColors.text,
+                categoryBorder: categoryColors.border,
+                categoryAccent: categoryColors.accent,
+                categoryDark: categoryColors.dark,
+                categoryDarkText: categoryColors.darkText
+            };
+        }),
         isCategories: true,
         basePath: './',
         assetPath: assetPath
@@ -559,8 +570,8 @@ async function build() {
         fs.mkdirSync('./dist/categories');
     }
     
-    for (const category of categories) {
-        const categoryBooks = books.filter(book => book.category === category).map(book => ({
+    for (const category of sortedCategories) {
+        const categoryBooks = books.filter(book => book.category === category.name).map(book => ({
             ...book,
             basePath: '../',
             // Ensure category colors are available
@@ -571,13 +582,21 @@ async function build() {
             categoryDark: book.categoryDark,
             categoryDarkText: book.categoryDarkText
         }));
+        const categoryColors = getCategoryColors(category.name);
         const categoryData = {
-            title: category,
-            categoryName: category,
+            title: category.name,
+            categoryName: category.name,
             books: categoryBooks,
             isCategories: true,
             basePath: '../',
-            assetPath: isProduction ? '/books/' : '../'
+            assetPath: isProduction ? '/books/' : '../',
+            // Pass category colors to the template
+            categoryBg: categoryColors.bg,
+            categoryText: categoryColors.text,
+            categoryBorder: categoryColors.border,
+            categoryAccent: categoryColors.accent,
+            categoryDark: categoryColors.dark,
+            categoryDarkText: categoryColors.darkText
         };
         
         const categoryContent = mainLayout({
@@ -586,7 +605,7 @@ async function build() {
             includeScripts: true
         });
         
-        const categorySlug = generateSlug(category);
+        const categorySlug = generateSlug(category.name);
         fs.writeFileSync(`./dist/categories/${categorySlug}.html`, categoryContent);
     }
     

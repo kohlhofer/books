@@ -1,12 +1,12 @@
 <style>
     body {
-        background: {{#if (eq categoryName "Fiction")}}#eff6ff{{else if (eq categoryName "Non-Fiction")}}#f0fdf4{{else if (eq categoryName "Science Fiction")}}#faf5ff{{else if (eq categoryName "Fantasy")}}#eef2ff{{else if (eq categoryName "Mystery")}}#fef2f2{{else if (eq categoryName "Romance")}}#fdf2f8{{else if (eq categoryName "Thriller")}}#fff7ed{{else if (eq categoryName "Biography")}}#fffbeb{{else if (eq categoryName "History")}}#fafaf9{{else if (eq categoryName "Philosophy")}}#f8fafc{{else if (eq categoryName "Psychology")}}#f0fdfa{{else if (eq categoryName "Business")}}#ecfdf5{{else if (eq categoryName "Technology")}}#ecfeff{{else if (eq categoryName "Design")}}#fdf4ff{{else if (eq categoryName "Classic")}}#fff1f2{{else if (eq categoryName "Poetry")}}#f5f3ff{{else if (eq categoryName "Self-Help")}}#f7fee7{{else if (eq categoryName "Travel")}}#f0f9ff{{else if (eq categoryName "Cooking")}}#fff7ed{{else if (eq categoryName "Art")}}#fdf2f8{{else}}#f9fafb{{/if}} !important;
+        background: {{categoryBg}} !important;
     }
 </style>
 
 <div class="text-center mb-8">
     <div class="mb-3 flex justify-center">
-        <svg class="w-16 h-16 {{#if (eq categoryName "Fiction")}}text-blue-500{{else if (eq categoryName "Non-Fiction")}}text-green-500{{else if (eq categoryName "Science Fiction")}}text-purple-500{{else if (eq categoryName "Fantasy")}}text-indigo-500{{else if (eq categoryName "Mystery")}}text-red-500{{else if (eq categoryName "Romance")}}text-pink-500{{else if (eq categoryName "Thriller")}}text-orange-500{{else if (eq categoryName "Biography")}}text-amber-500{{else if (eq categoryName "History")}}text-stone-500{{else if (eq categoryName "Philosophy")}}text-slate-500{{else if (eq categoryName "Psychology")}}text-teal-500{{else if (eq categoryName "Business")}}text-emerald-500{{else if (eq categoryName "Technology")}}text-cyan-500{{else if (eq categoryName "Design")}}text-fuchsia-500{{else if (eq categoryName "Classic")}}text-rose-500{{else if (eq categoryName "Poetry")}}text-violet-500{{else if (eq categoryName "Self-Help")}}text-lime-500{{else if (eq categoryName "Travel")}}text-sky-500{{else if (eq categoryName "Cooking")}}text-orange-500{{else if (eq categoryName "Art")}}text-pink-500{{else}}text-gray-500{{/if}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-16 h-16 {{categoryText}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
         </svg>
     </div>

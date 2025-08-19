@@ -20,7 +20,7 @@
     <div class="bg-white rounded-lg p-6 text-center shadow-card transition-all hover:shadow-card-hover hover:-translate-y-0.5" data-category="{{name}}" data-count="{{count}}">
         <a href="categories/{{slug}}.html" class="no-underline text-inherit">
             <div class="mb-3 flex justify-center">
-                <svg class="w-12 h-12 {{#if (eq name "Fiction")}}text-blue-500{{else if (eq name "Non-Fiction")}}text-green-500{{else if (eq name "Science Fiction")}}text-purple-500{{else if (eq name "Fantasy")}}text-indigo-500{{else if (eq name "Mystery")}}text-red-500{{else if (eq name "Romance")}}text-pink-500{{else if (eq name "Thriller")}}text-orange-500{{else if (eq name "Biography")}}text-amber-500{{else if (eq name "History")}}text-stone-500{{else if (eq name "Philosophy")}}text-slate-500{{else if (eq name "Psychology")}}text-teal-500{{else if (eq name "Business")}}text-emerald-500{{else if (eq name "Technology")}}text-cyan-500{{else if (eq name "Design")}}text-fuchsia-500{{else if (eq name "Classic")}}text-rose-500{{else if (eq name "Poetry")}}text-violet-500{{else if (eq name "Self-Help")}}text-lime-500{{else if (eq name "Travel")}}text-sky-500{{else if (eq name "Cooking")}}text-orange-500{{else if (eq name "Art")}}text-pink-500{{else}}text-gray-500{{/if}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-12 h-12 {{categoryText}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                 </svg>
             </div>
