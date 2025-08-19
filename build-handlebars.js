@@ -216,8 +216,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeFilter) typeFilter.addEventListener('change', displayBooks);
     if (sortBy) sortBy.addEventListener('change', sortBooks);
     
-    // Initial display
+    // Initial display and sort by author (default)
     displayBooks();
+    sortBooks(); // This will sort by author since it's the first option
 });`;
 };
 
