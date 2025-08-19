@@ -221,37 +221,40 @@ document.addEventListener('DOMContentLoaded', function() {
 });`;
 };
 
-// Category color mapping
-const categoryColors = {
-    'Fiction': { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', accent: 'bg-blue-100', dark: 'bg-blue-700', darkText: 'text-white' },
-    'Non-Fiction': { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', accent: 'bg-green-100', dark: 'bg-green-700', darkText: 'text-white' },
-    'Science Fiction': { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', accent: 'bg-purple-100', dark: 'bg-purple-700', darkText: 'text-white' },
-    'Fantasy': { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-200', accent: 'bg-indigo-100', dark: 'bg-indigo-700', darkText: 'text-white' },
-    'Mystery': { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', accent: 'bg-red-100', dark: 'bg-red-700', darkText: 'text-white' },
-    'Romance': { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', accent: 'bg-pink-100', dark: 'bg-pink-700', darkText: 'text-white' },
-    'Thriller': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', accent: 'bg-orange-100', dark: 'bg-orange-700', darkText: 'text-white' },
-    'Biography': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', accent: 'bg-amber-100', dark: 'bg-amber-700', darkText: 'text-white' },
-    'History': { bg: 'bg-stone-50', text: 'text-stone-700', border: 'border-stone-200', accent: 'bg-stone-100', dark: 'bg-stone-700', darkText: 'text-white' },
-    'Philosophy': { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', accent: 'bg-slate-100', dark: 'bg-slate-700', darkText: 'text-white' },
-    'Psychology': { bg: 'bg-teal-50', text: 'text-teal-700', border: 'border-teal-200', accent: 'bg-teal-100', dark: 'bg-teal-700', darkText: 'text-white' },
-    'Business': { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', accent: 'bg-emerald-100', dark: 'bg-emerald-700', darkText: 'text-white' },
-    'Technology': { bg: 'bg-cyan-50', text: 'text-cyan-700', border: 'border-cyan-200', accent: 'bg-cyan-100', dark: 'bg-cyan-700', darkText: 'text-white' },
-    'Design': { bg: 'bg-fuchsia-50', text: 'text-fuchsia-700', border: 'border-fuchsia-200', accent: 'bg-fuchsia-100', dark: 'bg-fuchsia-700', darkText: 'text-white' },
-    'Classic': { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', accent: 'bg-rose-100', dark: 'bg-rose-700', darkText: 'text-white' },
-    'Poetry': { bg: 'bg-violet-50', text: 'text-violet-700', border: 'border-violet-200', accent: 'bg-violet-100', dark: 'bg-violet-700', darkText: 'text-white' },
-    'Self-Help': { bg: 'bg-lime-50', text: 'text-lime-700', border: 'border-lime-200', accent: 'bg-lime-100', dark: 'bg-lime-700', darkText: 'text-white' },
-    'Travel': { bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200', accent: 'bg-sky-100', dark: 'bg-sky-700', darkText: 'text-white' },
-    'Cooking': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', accent: 'bg-orange-100', dark: 'bg-orange-700', darkText: 'text-white' },
-    'Art': { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', accent: 'bg-pink-100', dark: 'bg-pink-700', darkText: 'text-white' }
-};
+// Color palette for categories (will be assigned dynamically)
+const colorPalette = [
+    { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', accent: 'bg-blue-100', dark: 'bg-blue-700', darkText: 'text-white' },
+    { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', accent: 'bg-green-100', dark: 'bg-green-700', darkText: 'text-white' },
+    { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', accent: 'bg-purple-100', dark: 'bg-purple-700', darkText: 'text-white' },
+    { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-200', accent: 'bg-indigo-100', dark: 'bg-indigo-700', darkText: 'text-white' },
+    { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', accent: 'bg-red-100', dark: 'bg-red-700', darkText: 'text-white' },
+    { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', accent: 'bg-pink-100', dark: 'bg-pink-700', darkText: 'text-white' },
+    { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', accent: 'bg-orange-100', dark: 'bg-orange-700', darkText: 'text-white' },
+    { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', accent: 'bg-amber-100', dark: 'bg-amber-700', darkText: 'text-white' },
+    { bg: 'bg-stone-50', text: 'text-stone-700', border: 'border-stone-200', accent: 'bg-stone-100', dark: 'bg-stone-700', darkText: 'text-white' },
+    { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', accent: 'bg-slate-100', dark: 'bg-slate-700', darkText: 'text-white' },
+    { bg: 'bg-teal-50', text: 'text-teal-700', border: 'border-teal-200', accent: 'bg-teal-100', dark: 'bg-teal-700', darkText: 'text-white' },
+    { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', accent: 'bg-emerald-100', dark: 'bg-emerald-700', darkText: 'text-white' },
+    { bg: 'bg-cyan-50', text: 'text-cyan-700', border: 'border-cyan-200', accent: 'bg-cyan-100', dark: 'bg-cyan-700', darkText: 'text-white' },
+    { bg: 'bg-fuchsia-50', text: 'text-fuchsia-700', border: 'border-fuchsia-200', accent: 'bg-fuchsia-100', dark: 'bg-fuchsia-700', darkText: 'text-white' },
+    { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', accent: 'bg-rose-100', dark: 'bg-rose-700', darkText: 'text-white' },
+    { bg: 'bg-violet-50', text: 'text-violet-700', border: 'border-violet-200', accent: 'bg-violet-100', dark: 'bg-violet-700', darkText: 'text-white' },
+    { bg: 'bg-lime-50', text: 'text-lime-700', border: 'border-lime-200', accent: 'bg-lime-100', dark: 'bg-lime-700', darkText: 'text-white' },
+    { bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200', accent: 'bg-sky-100', dark: 'bg-sky-700', darkText: 'text-white' }
+];
 
 // Default color for unknown categories
 const defaultCategoryColor = { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', accent: 'bg-gray-100', dark: 'bg-gray-700', darkText: 'text-white' };
 
+// Dynamic category color assignment
+let categoryColorMap = {};
+
 // Helper function to get category colors
 function getCategoryColors(categoryName) {
-    return categoryColors[categoryName] || defaultCategoryColor;
+    return categoryColorMap[categoryName] || defaultCategoryColor;
 }
+
+
 
 // Main build function
 async function build() {
@@ -264,12 +267,21 @@ async function build() {
     
     // Load and process book data
     const books = [];
-    const bookFiles = [
-        'books/library.csv',
-        'books/kindle.csv', 
-        'books/audible.csv',
-        'books/river.csv'
-    ];
+    
+    // Automatically discover CSV files in the books directory
+    const booksDir = path.join(__dirname, 'books');
+    const bookFiles = [];
+    
+    if (fs.existsSync(booksDir)) {
+        const files = fs.readdirSync(booksDir);
+        files.forEach(file => {
+            if (file.endsWith('.csv')) {
+                bookFiles.push(path.join('books', file));
+            }
+        });
+    }
+    
+    console.log(`Found ${bookFiles.length} CSV files: ${bookFiles.join(', ')}`);
     
     for (const file of bookFiles) {
         if (fs.existsSync(file)) {
@@ -485,13 +497,26 @@ async function build() {
         categoryCounts[book.category] = (categoryCounts[book.category] || 0) + 1;
     });
     
+    // Sort categories by book count (descending) and assign colors
+    const sortedCategories = Object.entries(categoryCounts)
+        .sort((a, b) => b[1] - a[1]) // Sort by count descending
+        .map(([name, count]) => ({ name, count }));
+    
+    // Assign colors to categories based on book count order
+    sortedCategories.forEach((category, index) => {
+        const colorIndex = index % colorPalette.length; // Loop through colors if more categories than colors
+        categoryColorMap[category.name] = colorPalette[colorIndex];
+    });
+    
+    console.log(`Assigned colors to ${sortedCategories.length} categories`);
+    
     const categoriesData = {
         title: 'By Category',
-        categories: Object.entries(categoryCounts).map(([name, count]) => ({
-            name,
-            count,
-            slug: generateSlug(name)
-        })).sort((a, b) => b.count - a.count),
+        categories: sortedCategories.map(category => ({
+            name: category.name,
+            count: category.count,
+            slug: generateSlug(category.name)
+        })),
         isCategories: true,
         basePath: './',
         assetPath: assetPath
