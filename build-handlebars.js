@@ -27,6 +27,10 @@ Handlebars.registerHelper('slugify', function(text) {
         .replace(/^-+|-+$/g, '');
 });
 
+Handlebars.registerHelper('eq', function(a, b) {
+    return a === b;
+});
+
 // Custom CSV parser that handles quoted fields with colons properly
 function parseCSVLine(line) {
     const result = [];
