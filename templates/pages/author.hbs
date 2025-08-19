@@ -24,12 +24,12 @@
 // Book filtering and sorting functionality
 function displayBooks() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const bookCards = document.querySelectorAll('.book-card');
+    const bookCards = Array.from(document.querySelectorAll('[data-category]'));
     let visibleCount = 0;
     
     bookCards.forEach(card => {
-        const title = card.querySelector('.book-title').textContent.toLowerCase();
-        const category = card.querySelector('.book-category').textContent.toLowerCase();
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const category = card.dataset.category.toLowerCase();
         
         const matchesSearch = title.includes(searchTerm) || category.includes(searchTerm);
         card.style.display = matchesSearch ? 'block' : 'none';
@@ -40,12 +40,12 @@ function displayBooks() {
 
 function sortBooks() {
     const sortBy = document.getElementById('sortBy').value;
-    const bookCards = Array.from(document.querySelectorAll('.book-card'));
-    const booksGrid = document.querySelector('.books-grid');
+    const bookCards = Array.from(document.querySelectorAll('[data-category]'));
+    const booksGrid = document.querySelector('.grid');
     
     bookCards.sort((a, b) => {
-        const aTitle = a.querySelector('.book-title').textContent.toLowerCase();
-        const bTitle = b.querySelector('.book-title').textContent.toLowerCase();
+        const aTitle = a.querySelector('h3').textContent.toLowerCase();
+        const bTitle = b.querySelector('h3').textContent.toLowerCase();
         return aTitle.localeCompare(bTitle);
     });
     
