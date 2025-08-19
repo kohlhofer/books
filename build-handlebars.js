@@ -31,6 +31,15 @@ Handlebars.registerHelper('eq', function(a, b) {
     return a === b;
 });
 
+Handlebars.registerHelper('categoryColor', function(categoryName, colorType) {
+    const colors = getCategoryColors(categoryName);
+    return colors[colorType] || '';
+});
+
+Handlebars.registerHelper('lookup', function(obj, key) {
+    return obj[key];
+});
+
 // Custom CSV parser that handles quoted fields with colons properly
 function parseCSVLine(line) {
     const result = [];
@@ -211,6 +220,38 @@ document.addEventListener('DOMContentLoaded', function() {
     displayBooks();
 });`;
 };
+
+// Category color mapping
+const categoryColors = {
+    'Fiction': { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', accent: 'bg-blue-100', dark: 'bg-blue-700', darkText: 'text-white' },
+    'Non-Fiction': { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', accent: 'bg-green-100', dark: 'bg-green-700', darkText: 'text-white' },
+    'Science Fiction': { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', accent: 'bg-purple-100', dark: 'bg-purple-700', darkText: 'text-white' },
+    'Fantasy': { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-200', accent: 'bg-indigo-100', dark: 'bg-indigo-700', darkText: 'text-white' },
+    'Mystery': { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', accent: 'bg-red-100', dark: 'bg-red-700', darkText: 'text-white' },
+    'Romance': { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', accent: 'bg-pink-100', dark: 'bg-pink-700', darkText: 'text-white' },
+    'Thriller': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', accent: 'bg-orange-100', dark: 'bg-orange-700', darkText: 'text-white' },
+    'Biography': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', accent: 'bg-amber-100', dark: 'bg-amber-700', darkText: 'text-white' },
+    'History': { bg: 'bg-stone-50', text: 'text-stone-700', border: 'border-stone-200', accent: 'bg-stone-100', dark: 'bg-stone-700', darkText: 'text-white' },
+    'Philosophy': { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', accent: 'bg-slate-100', dark: 'bg-slate-700', darkText: 'text-white' },
+    'Psychology': { bg: 'bg-teal-50', text: 'text-teal-700', border: 'border-teal-200', accent: 'bg-teal-100', dark: 'bg-teal-700', darkText: 'text-white' },
+    'Business': { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', accent: 'bg-emerald-100', dark: 'bg-emerald-700', darkText: 'text-white' },
+    'Technology': { bg: 'bg-cyan-50', text: 'text-cyan-700', border: 'border-cyan-200', accent: 'bg-cyan-100', dark: 'bg-cyan-700', darkText: 'text-white' },
+    'Design': { bg: 'bg-fuchsia-50', text: 'text-fuchsia-700', border: 'border-fuchsia-200', accent: 'bg-fuchsia-100', dark: 'bg-fuchsia-700', darkText: 'text-white' },
+    'Classic': { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', accent: 'bg-rose-100', dark: 'bg-rose-700', darkText: 'text-white' },
+    'Poetry': { bg: 'bg-violet-50', text: 'text-violet-700', border: 'border-violet-200', accent: 'bg-violet-100', dark: 'bg-violet-700', darkText: 'text-white' },
+    'Self-Help': { bg: 'bg-lime-50', text: 'text-lime-700', border: 'border-lime-200', accent: 'bg-lime-100', dark: 'bg-lime-700', darkText: 'text-white' },
+    'Travel': { bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200', accent: 'bg-sky-100', dark: 'bg-sky-700', darkText: 'text-white' },
+    'Cooking': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', accent: 'bg-orange-100', dark: 'bg-orange-700', darkText: 'text-white' },
+    'Art': { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', accent: 'bg-pink-100', dark: 'bg-pink-700', darkText: 'text-white' }
+};
+
+// Default color for unknown categories
+const defaultCategoryColor = { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', accent: 'bg-gray-100', dark: 'bg-gray-700', darkText: 'text-white' };
+
+// Helper function to get category colors
+function getCategoryColors(categoryName) {
+    return categoryColors[categoryName] || defaultCategoryColor;
+}
 
 // Main build function
 async function build() {
@@ -406,6 +447,15 @@ async function build() {
         book.categorySlug = generateSlug(book.category);
         // Add basePath for linking
         book.basePath = './';
+        
+        // Add category colors
+        const categoryColors = getCategoryColors(book.category);
+        book.categoryBg = categoryColors.bg;
+        book.categoryText = categoryColors.text;
+        book.categoryBorder = categoryColors.border;
+        book.categoryAccent = categoryColors.accent;
+        book.categoryDark = categoryColors.dark;
+        book.categoryDarkText = categoryColors.darkText;
     });
     
     // Generate index page
@@ -487,7 +537,14 @@ async function build() {
     for (const category of categories) {
         const categoryBooks = books.filter(book => book.category === category).map(book => ({
             ...book,
-            basePath: '../'
+            basePath: '../',
+            // Ensure category colors are available
+            categoryBg: book.categoryBg,
+            categoryText: book.categoryText,
+            categoryBorder: book.categoryBorder,
+            categoryAccent: book.categoryAccent,
+            categoryDark: book.categoryDark,
+            categoryDarkText: book.categoryDarkText
         }));
         const categoryData = {
             title: category,
@@ -516,7 +573,14 @@ async function build() {
     for (const author of Object.keys(authorCounts)) {
         const authorBooks = books.filter(book => book.author === author).map(book => ({
             ...book,
-            basePath: '../'
+            basePath: '../',
+            // Ensure category colors are available
+            categoryBg: book.categoryBg,
+            categoryText: book.categoryText,
+            categoryBorder: book.categoryBorder,
+            categoryAccent: book.categoryAccent,
+            categoryDark: book.categoryDark,
+            categoryDarkText: book.categoryDarkText
         }));
         const authorData = {
             title: author,
