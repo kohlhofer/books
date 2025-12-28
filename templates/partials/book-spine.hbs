@@ -7,10 +7,13 @@
    data-title="{{title}}"
    title="{{title}} by {{firstName}} {{lastName}}">
     <div class="book-spine-inner spine-style-{{spineStyle}} spine-font-{{spineFont}}"
-         style="height: {{spineHeight}}px; width: {{spineWidth}}px; background-color: {{categoryDark}};">
+         style="height: {{spineHeight}}px; width: {{spineWidth}}px; background-color: {{spineColor}};">
         <div class="book-spine-edge"></div>
         <div class="book-spine-content">
             <span class="book-spine-title">{{title}}</span>
+            {{#if hasPublisherLogo}}
+            <span class="book-spine-logo {{publisherLogoStyle}}">{{publisherLogoSymbol}}</span>
+            {{/if}}
             <span class="book-spine-author">{{lastName}}</span>
         </div>
     </div>

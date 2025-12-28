@@ -273,6 +273,25 @@
     flex-shrink: 0;
   }
 
+  /* Publisher logo styles */
+  .book-spine-logo {
+    color: rgba(255,255,255,0.4);
+    font-size: 16px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+    margin: 4px 0;
+    text-align: center;
+  }
+
+  .publisher-logo-circle { font-size: 14px; }
+  .publisher-logo-diamond { font-size: 12px; }
+  .publisher-logo-star { font-size: 14px; color: rgba(218,195,142,0.5); }
+  .publisher-logo-square { font-size: 10px; }
+  .publisher-logo-triangle { font-size: 12px; }
+  .publisher-logo-ring { font-size: 16px; }
+  .publisher-logo-bars { font-size: 14px; letter-spacing: -2px; }
+  .publisher-logo-cross { font-size: 18px; font-weight: 300; }
+
   /* Font variants for natural variation - distinctly different typefaces */
   .spine-font-0 { font-family: 'Georgia', serif; }
   .spine-font-1 { font-family: 'Courier New', 'Courier', monospace; }

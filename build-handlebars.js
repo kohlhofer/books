@@ -46,6 +46,39 @@ function seededRandom(seed) {
     return x - Math.floor(x);
 }
 
+// Slightly adjust a hex color's brightness/saturation
+function adjustColor(hexColor, index) {
+    // Parse hex color
+    const hex = hexColor.replace('#', '');
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+
+    // Generate subtle variation (-15 to +15 for each channel)
+    const variation = (seededRandom(index * 73) - 0.5) * 30;
+    const hueShift = (seededRandom(index * 89) - 0.5) * 20;
+
+    // Apply variation while keeping within bounds
+    r = Math.max(0, Math.min(255, Math.round(r + variation + hueShift * 0.3)));
+    g = Math.max(0, Math.min(255, Math.round(g + variation)));
+    b = Math.max(0, Math.min(255, Math.round(b + variation - hueShift * 0.3)));
+
+    // Convert back to hex
+    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+// Fake publisher logos (simple geometric shapes described as CSS)
+const publisherLogos = [
+    { name: 'circle', symbol: '●', style: 'publisher-logo-circle' },
+    { name: 'diamond', symbol: '◆', style: 'publisher-logo-diamond' },
+    { name: 'star', symbol: '★', style: 'publisher-logo-star' },
+    { name: 'square', symbol: '■', style: 'publisher-logo-square' },
+    { name: 'triangle', symbol: '▲', style: 'publisher-logo-triangle' },
+    { name: 'ring', symbol: '○', style: 'publisher-logo-ring' },
+    { name: 'bars', symbol: '≡', style: 'publisher-logo-bars' },
+    { name: 'cross', symbol: '+', style: 'publisher-logo-cross' },
+];
+
 // Calculate spine dimensions based on title (scaled 1.5x)
 function calculateSpineDimensions(title, index) {
     const titleLength = (title || '').length;
@@ -76,7 +109,14 @@ function calculateSpineDimensions(title, index) {
     // Font variant (0-3 for different font families)
     const fontVariant = Math.floor(seededRandom(index * 61) * 4);
 
-    return { height, width, styleVariant, fontVariant };
+    // Publisher logo (only ~25% of books have one, and only wider books)
+    let publisherLogo = null;
+    if (width >= 70 && seededRandom(index * 79) < 0.25) {
+        const logoIndex = Math.floor(seededRandom(index * 83) * publisherLogos.length);
+        publisherLogo = publisherLogos[logoIndex];
+    }
+
+    return { height, width, styleVariant, fontVariant, publisherLogo };
 }
 
 // Organize books into shelf rows
@@ -561,6 +601,16 @@ async function build() {
         book.spineWidth = dimensions.width;
         book.spineStyle = dimensions.styleVariant;
         book.spineFont = dimensions.fontVariant;
+
+        // Apply subtle color variation to the spine color
+        book.spineColor = adjustColor(categoryColors.dark, index);
+
+        // Add publisher logo if applicable
+        if (dimensions.publisherLogo) {
+            book.hasPublisherLogo = true;
+            book.publisherLogoSymbol = dimensions.publisherLogo.symbol;
+            book.publisherLogoStyle = dimensions.publisherLogo.style;
+        }
     });
     
     // Generate index page
