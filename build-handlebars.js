@@ -205,35 +205,36 @@ const loadCSS = () => {
 const generateJavaScript = () => {
     return `// Book filtering and search functionality
 function displayBooks() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const categoryFilter = document.getElementById('categoryFilter').value;
-    const locationFilter = document.getElementById('locationFilter').value;
-    const typeFilter = document.getElementById('typeFilter').value;
-    const sortBy = document.getElementById('sortBy').value;
-    
-    const bookCards = Array.from(document.querySelectorAll('[data-category]')); // Using data attributes
+    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+    const locationFilter = document.getElementById('locationFilter')?.value || '';
+    const typeFilter = document.getElementById('typeFilter')?.value || '';
+
+    const bookItems = Array.from(document.querySelectorAll('[data-category]'));
     let visibleCount = 0;
-    
-    bookCards.forEach(card => {
-        const title = card.querySelector('h3').textContent.toLowerCase(); // Title is in h3
-        const author = card.querySelector('p').textContent.toLowerCase(); // Author is in first p
-        const category = card.dataset.category;
-        const location = card.dataset.location;
-        const type = card.dataset.type;
-        
-        const matchesSearch = title.includes(searchTerm) || author.includes(searchTerm) || category.toLowerCase().includes(searchTerm);
-        const matchesCategory = !categoryFilter || category === categoryFilter;
+
+    bookItems.forEach(item => {
+        // Get title from data attribute or element
+        const title = (item.dataset.title || item.querySelector('.book-spine-title, .book-cover-title, h3')?.textContent || '').toLowerCase();
+        // Get author from data attribute or element
+        const author = (item.dataset.author || item.querySelector('.book-spine-author, .book-cover-author, p')?.textContent || '').toLowerCase();
+        const category = (item.dataset.category || '').toLowerCase();
+        const location = item.dataset.location || '';
+        const type = item.dataset.type || '';
+
+        const matchesSearch = !searchTerm || title.includes(searchTerm) || author.includes(searchTerm) || category.includes(searchTerm);
+        const matchesCategory = !categoryFilter || item.dataset.category === categoryFilter;
         const matchesLocation = !locationFilter || location === locationFilter;
         const matchesType = !typeFilter || type === typeFilter;
-        
+
         const shouldShow = matchesSearch && matchesCategory && matchesLocation && matchesType;
-        card.style.display = shouldShow ? 'block' : 'none';
-        
+        item.style.display = shouldShow ? '' : 'none';
+
         if (shouldShow) visibleCount++;
     });
-    
+
     updateStats(visibleCount);
-    
+
     // Show/hide no results message
     const noResults = document.getElementById('noResults');
     if (noResults) {
@@ -249,45 +250,35 @@ function updateStats(count) {
 }
 
 function sortBooks() {
-    const sortBy = document.getElementById('sortBy').value;
-    const bookCards = Array.from(document.querySelectorAll('[data-category]'));
-    const booksGrid = document.querySelector('.grid');
-    
-    bookCards.sort((a, b) => {
-        let aValue, bValue;
-        
+    const sortBy = document.getElementById('sortBy')?.value || 'author';
+    const bookItems = Array.from(document.querySelectorAll('[data-category]'));
+    const container = document.querySelector('.shelf-row, .covers-shelf, .grid');
+
+    if (!container) return;
+
+    bookItems.sort((a, b) => {
         switch (sortBy) {
             case 'title':
-                aValue = a.querySelector('h3').textContent.toLowerCase();
-                bValue = b.querySelector('h3').textContent.toLowerCase();
-                break;
+                const aTitle = (a.dataset.title || a.querySelector('.book-spine-title, .book-cover-title, h3')?.textContent || '').toLowerCase();
+                const bTitle = (b.dataset.title || b.querySelector('.book-spine-title, .book-cover-title, h3')?.textContent || '').toLowerCase();
+                return aTitle.localeCompare(bTitle);
             case 'author':
-                // Extract author names from "by Author Name" format
-                const aAuthor = a.querySelector('p').textContent.replace('by ', '').trim();
-                const bAuthor = b.querySelector('p').textContent.replace('by ', '').trim();
-                // Split into first and last name
-                const [aFirst, ...aLast] = aAuthor.split(' ');
-                const [bFirst, ...bLast] = bAuthor.split(' ');
-                // Compare last names first, then first names
-                const aLastName = aLast.join(' ').toLowerCase();
-                const bLastName = bLast.join(' ').toLowerCase();
+                const aAuthor = (a.dataset.author || '').toLowerCase();
+                const bAuthor = (b.dataset.author || '').toLowerCase();
+                // Sort by last name
+                const aLastName = aAuthor.split(' ').pop() || '';
+                const bLastName = bAuthor.split(' ').pop() || '';
                 if (aLastName !== bLastName) {
                     return aLastName.localeCompare(bLastName);
                 }
-                return aFirst.toLowerCase().localeCompare(bFirst.toLowerCase());
-                break;
-
+                return aAuthor.localeCompare(bAuthor);
             default:
                 return 0;
         }
-        
-        if (aValue < bValue) return -1;
-        if (aValue > bValue) return 1;
-        return 0;
     });
-    
+
     // Reorder DOM elements
-    bookCards.forEach(card => booksGrid.appendChild(card));
+    bookItems.forEach(item => container.appendChild(item));
 }
 
 // Event listeners
