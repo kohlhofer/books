@@ -40,6 +40,54 @@ Handlebars.registerHelper('lookup', function(obj, key) {
     return obj[key];
 });
 
+// Helper to generate seeded random number for consistent dimensions
+function seededRandom(seed) {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
+
+// Calculate spine dimensions based on title (scaled 1.5x)
+function calculateSpineDimensions(title, index) {
+    const titleLength = (title || '').length;
+
+    // Height: 255-360px based on title length (1.5x scale)
+    const baseHeight = 255;
+    const heightVariation = Math.min(titleLength * 1.5, 105);
+    const randomHeightOffset = (seededRandom(index * 17) - 0.5) * 45;
+    const height = Math.round(baseHeight + heightVariation + randomHeightOffset);
+
+    // Width based on title length - thin books only for short titles
+    const widthRandom = seededRandom(index * 31);
+    let width;
+    if (titleLength <= 15 && widthRandom < 0.4) {
+        // Short titles can be thin (54-70px)
+        width = Math.round(54 + seededRandom(index * 41) * 16);
+    } else if (titleLength <= 25 && widthRandom < 0.3) {
+        // Medium titles can be slim (70-90px)
+        width = Math.round(70 + seededRandom(index * 41) * 20);
+    } else {
+        // Long titles or random selection get normal width (85-128px)
+        width = Math.round(85 + seededRandom(index * 41) * 43);
+    }
+
+    // Spine style variant (0-5 for different visual treatments)
+    const styleVariant = Math.floor(seededRandom(index * 47) * 6);
+
+    // Font variant (0-3 for different font families)
+    const fontVariant = Math.floor(seededRandom(index * 61) * 4);
+
+    return { height, width, styleVariant, fontVariant };
+}
+
+// Organize books into shelf rows
+function organizeIntoShelves(books, booksPerShelf = 12) {
+    const shelves = [];
+    for (let i = 0; i < books.length; i += booksPerShelf) {
+        shelves.push(books.slice(i, i + booksPerShelf));
+    }
+    return shelves;
+}
+
 // Custom CSV parser that handles quoted fields with colons properly
 function parseCSVLine(line) {
     const result = [];
@@ -222,26 +270,44 @@ document.addEventListener('DOMContentLoaded', function() {
 });`;
 };
 
-// Color palette for categories (will be assigned dynamically)
+// Color palette for categories - cozy old bookstore colors
     const colorPalette = [
-        { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe', accent: '#dbeafe', dark: '#1d4ed8', darkText: '#ffffff' },
-        { bg: '#f0fdf4', text: '#15803d', border: '#bbf7d0', accent: '#dcfce7', dark: '#15803d', darkText: '#ffffff' },
-        { bg: '#faf5ff', text: '#7c3aed', border: '#c4b5fd', accent: '#ddd6fe', dark: '#7c3aed', darkText: '#ffffff' },
-        { bg: '#eef2ff', text: '#4338ca', border: '#c7d2fe', accent: '#dbeafe', dark: '#4338ca', darkText: '#ffffff' },
-        { bg: '#fef2f2', text: '#b91c1c', border: '#fecaca', accent: '#fee2e2', dark: '#b91c1c', darkText: '#ffffff' },
-        { bg: '#fdf2f8', text: '#be185d', border: '#f9a8d4', accent: '#fce7f3', dark: '#be185d', darkText: '#ffffff' },
-        { bg: '#fff7ed', text: '#c2410c', border: '#fed7aa', accent: '#ffedd5', dark: '#c2410c', darkText: '#ffffff' },
-        { bg: '#fffbeb', text: '#d97706', border: '#fde68a', accent: '#fef3c7', dark: '#d97706', darkText: '#ffffff' },
-        { bg: '#fafaf9', text: '#44403c', border: '#e7e5e4', accent: '#f5f5f4', dark: '#44403c', darkText: '#ffffff' },
-        { bg: '#f8fafc', text: '#334155', border: '#cbd5e1', accent: '#e2e8f0', dark: '#334155', darkText: '#ffffff' },
-        { bg: '#f0fdfa', text: '#0f766e', border: '#99f6e4', accent: '#ccfbf1', dark: '#0f766e', darkText: '#ffffff' },
-        { bg: '#ecfdf5', text: '#047857', border: '#86efac', accent: '#bbf7d0', dark: '#047857', darkText: '#ffffff' },
-        { bg: '#ecfeff', text: '#0891b2', border: '#67e8f9', accent: '#a5f3fc', dark: '#0891b2', darkText: '#ffffff' },
-        { bg: '#fdf4ff', text: '#a21caf', border: '#e879f9', accent: '#f0abfc', dark: '#a21caf', darkText: '#ffffff' },
-        { bg: '#fff1f2', text: '#be123c', border: '#fda4af', accent: '#fecdd3', dark: '#be123c', darkText: '#ffffff' },
-        { bg: '#f5f3ff', text: '#6d28d9', border: '#c4b5fd', accent: '#ddd6fe', dark: '#6d28d9', darkText: '#ffffff' },
-        { bg: '#f7fee7', text: '#65a30d', border: '#bef264', accent: '#d9f99d', dark: '#65a30d', darkText: '#ffffff' },
-        { bg: '#f0f9ff', text: '#0369a1', border: '#7dd3fc', accent: '#bae6fd', dark: '#0369a1', darkText: '#ffffff' }
+        // Deep burgundy/maroon - classic leather
+        { bg: '#f5e6e8', text: '#722f37', border: '#d4a5a5', accent: '#e8c4c4', dark: '#722f37', darkText: '#f5e6dc' },
+        // Forest green - aged cloth binding
+        { bg: '#e8efe8', text: '#2d4a3e', border: '#7d9d8c', accent: '#a8c5b5', dark: '#2d4a3e', darkText: '#e8efe8' },
+        // Navy blue - traditional hardcover
+        { bg: '#e6eaf0', text: '#2c3e5c', border: '#8a9cba', accent: '#b5c4d8', dark: '#2c3e5c', darkText: '#e6eaf0' },
+        // Warm brown - aged leather
+        { bg: '#f0e8dc', text: '#5c4033', border: '#b8a089', accent: '#d4c4aa', dark: '#5c4033', darkText: '#f0e8dc' },
+        // Faded olive - vintage cloth
+        { bg: '#eceee6', text: '#4a4f3c', border: '#9da388', accent: '#c4c9b0', dark: '#4a4f3c', darkText: '#eceee6' },
+        // Dusty rose - antique
+        { bg: '#f2e8e8', text: '#7d5a5a', border: '#c9a8a8', accent: '#dcc4c4', dark: '#7d5a5a', darkText: '#f2e8e8' },
+        // Muted teal - art deco
+        { bg: '#e4ecec', text: '#3d5c5c', border: '#8aabab', accent: '#b0c9c9', dark: '#3d5c5c', darkText: '#e4ecec' },
+        // Burnt sienna - terracotta
+        { bg: '#f2e6dc', text: '#8b4c39', border: '#c9967d', accent: '#ddb8a0', dark: '#8b4c39', darkText: '#f2e6dc' },
+        // Slate gray - modern classic
+        { bg: '#eaeaec', text: '#4a4a52', border: '#9a9aa5', accent: '#c0c0c8', dark: '#4a4a52', darkText: '#eaeaec' },
+        // Ochre/mustard - aged paper
+        { bg: '#f5eee0', text: '#7a6832', border: '#c9b87a', accent: '#ddd0a0', dark: '#7a6832', darkText: '#f5eee0' },
+        // Deep plum - vintage
+        { bg: '#ede6ee', text: '#5c3d5e', border: '#a888ab', accent: '#c8b0ca', dark: '#5c3d5e', darkText: '#ede6ee' },
+        // Aged copper - weathered
+        { bg: '#f0ebe4', text: '#6b5344', border: '#b8a08c', accent: '#d0c0aa', dark: '#6b5344', darkText: '#f0ebe4' },
+        // Muted indigo - scholarly
+        { bg: '#e8e8f0', text: '#3f3f5c', border: '#8888aa', accent: '#b0b0c8', dark: '#3f3f5c', darkText: '#e8e8f0' },
+        // Sage green - pastoral
+        { bg: '#e8ece4', text: '#4f5c44', border: '#99a888', accent: '#bcc8ae', dark: '#4f5c44', darkText: '#e8ece4' },
+        // Russet - autumn tones
+        { bg: '#f2e8e0', text: '#6b4433', border: '#b89070', accent: '#d4b498', dark: '#6b4433', darkText: '#f2e8e0' },
+        // Charcoal - ink black
+        { bg: '#e8e8e8', text: '#3a3a3a', border: '#8a8a8a', accent: '#b0b0b0', dark: '#3a3a3a', darkText: '#e8e8e8' },
+        // Faded brick - weathered
+        { bg: '#f0e4dc', text: '#7a4a42', border: '#c0908a', accent: '#d8b4ac', dark: '#7a4a42', darkText: '#f0e4dc' },
+        // Antique gold - gilded
+        { bg: '#f4f0e4', text: '#6b5c32', border: '#c0aa68', accent: '#d8c890', dark: '#6b5c32', darkText: '#f4f0e4' }
     ];
 
 // Default color for unknown categories
@@ -472,14 +538,14 @@ async function build() {
     console.log(`Assigned colors to ${sortedCategories.length} categories`);
     
     // Add author field for display and processing
-    books.forEach(book => {
+    books.forEach((book, index) => {
         book.author = `${book.firstName} ${book.lastName}`;
         // Add slugs for linking
         book.authorSlug = generateSlug(book.author);
         book.categorySlug = generateSlug(book.category);
         // Add basePath for linking
         book.basePath = './';
-        
+
         // Add category colors (now available from categoryColorMap)
         const categoryColors = getCategoryColors(book.category);
         book.categoryBg = categoryColors.bg;
@@ -488,12 +554,21 @@ async function build() {
         book.categoryAccent = categoryColors.accent;
         book.categoryDark = categoryColors.dark;
         book.categoryDarkText = categoryColors.darkText;
+
+        // Add spine dimensions and style variants for bookshelf display
+        const dimensions = calculateSpineDimensions(book.title, index);
+        book.spineHeight = dimensions.height;
+        book.spineWidth = dimensions.width;
+        book.spineStyle = dimensions.styleVariant;
+        book.spineFont = dimensions.fontVariant;
     });
     
     // Generate index page
+    const shelves = organizeIntoShelves(books, 25);
     const indexData = {
         title: 'All Books',
         books: books,
+        shelves: shelves,
         totalBooks: books.length,
         categories: categories,
         types: types,
@@ -575,6 +650,7 @@ async function build() {
         const categoryBooks = books.filter(book => book.category === category.name).map(book => ({
             ...book,
             basePath: '../',
+            isCategories: true,
             // Ensure category colors are available
             categoryBg: book.categoryBg,
             categoryText: book.categoryText,
@@ -583,11 +659,13 @@ async function build() {
             categoryDark: book.categoryDark,
             categoryDarkText: book.categoryDarkText
         }));
+        const categoryShelves = organizeIntoShelves(categoryBooks, 20);
         const categoryColors = getCategoryColors(category.name);
         const categoryData = {
             title: category.name,
             categoryName: category.name,
             books: categoryBooks,
+            shelves: categoryShelves,
             isCategories: true,
             basePath: '../',
             assetPath: isProduction ? '/books/' : '../',
@@ -619,6 +697,7 @@ async function build() {
         const authorBooks = books.filter(book => book.author === author).map(book => ({
             ...book,
             basePath: '../',
+            isAuthors: true,
             // Ensure category colors are available
             categoryBg: book.categoryBg,
             categoryText: book.categoryText,
@@ -627,10 +706,12 @@ async function build() {
             categoryDark: book.categoryDark,
             categoryDarkText: book.categoryDarkText
         }));
+        const authorShelves = organizeIntoShelves(authorBooks, 5); // 5 covers per shelf
         const authorData = {
             title: author,
             authorName: author,
             books: authorBooks,
+            shelves: authorShelves,
             isAuthors: true,
             basePath: '../',
             assetPath: isProduction ? '/books/' : '../'

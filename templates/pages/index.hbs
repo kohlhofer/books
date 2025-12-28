@@ -1,9 +1,11 @@
 {{> search-section}}
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-8">
-    {{#each books}}
-    {{> book-card this basePath=../basePath isAuthors=../isAuthors isCategories=../isCategories}}
-    {{/each}}
+<div class="bookshelf-container">
+    <div class="shelf-row">
+        {{#each books}}
+        {{> book-spine this}}
+        {{/each}}
+    </div>
 </div>
 
 <div class="text-center text-secondary mt-8">

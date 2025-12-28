@@ -1,0 +1,17 @@
+<a href="{{#if isAuthors}}../authors/{{authorSlug}}.html{{else if isCategories}}../authors/{{authorSlug}}.html{{else}}./authors/{{authorSlug}}.html{{/if}}"
+   class="book-spine"
+   data-category="{{category}}"
+   data-author="{{author}}"
+   data-type="{{type}}"
+   data-location="{{location}}"
+   data-title="{{title}}"
+   title="{{title}} by {{firstName}} {{lastName}}">
+    <div class="book-spine-inner spine-style-{{spineStyle}} spine-font-{{spineFont}}"
+         style="height: {{spineHeight}}px; width: {{spineWidth}}px; background-color: {{categoryDark}};">
+        <div class="book-spine-edge"></div>
+        <div class="book-spine-content">
+            <span class="book-spine-title">{{title}}</span>
+            <span class="book-spine-author">{{lastName}}</span>
+        </div>
+    </div>
+</a>

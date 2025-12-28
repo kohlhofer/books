@@ -8,7 +8,9 @@
     "build:site": "node build-handlebars.js",
     "build:css": "npx tailwindcss -i ./templates/styles/tailwind.css -o ./dist/style.css",
     "build:prod": "BUILD_ENV=production npm run build:site && npm run build:css",
-    "dev": "cd dist && python3 -m http.server 8000",
+    "serve": "cd dist && python3 -m http.server 8000",
+    "dev": "npm run build && npm run serve",
+    "watch:css": "npx tailwindcss -i ./templates/styles/tailwind.css -o ./dist/style.css --watch",
     "clean": "rm -rf dist"
   },
   "keywords": [
