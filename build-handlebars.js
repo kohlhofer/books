@@ -83,24 +83,24 @@ const publisherLogos = [
 function calculateSpineDimensions(title, index) {
     const titleLength = (title || '').length;
 
-    // Height: 255-360px based on title length (1.5x scale)
-    const baseHeight = 255;
-    const heightVariation = Math.min(titleLength * 1.5, 105);
-    const randomHeightOffset = (seededRandom(index * 17) - 0.5) * 45;
+    // Height: 290-350px - less variation for more uniform look
+    const baseHeight = 290;
+    const heightVariation = Math.min(titleLength * 0.8, 40);
+    const randomHeightOffset = (seededRandom(index * 17) - 0.5) * 20;
     const height = Math.round(baseHeight + heightVariation + randomHeightOffset);
 
     // Width based on title length - thin books only for short titles
     const widthRandom = seededRandom(index * 31);
     let width;
     if (titleLength <= 15 && widthRandom < 0.4) {
-        // Short titles can be thin (65-82px)
-        width = Math.round(65 + seededRandom(index * 41) * 17);
+        // Short titles can be thin (55-70px)
+        width = Math.round(55 + seededRandom(index * 41) * 15);
     } else if (titleLength <= 25 && widthRandom < 0.3) {
-        // Medium titles can be slim (80-100px)
-        width = Math.round(80 + seededRandom(index * 41) * 20);
+        // Medium titles can be slim (65-85px)
+        width = Math.round(65 + seededRandom(index * 41) * 20);
     } else {
-        // Long titles or random selection get normal width (95-135px)
-        width = Math.round(95 + seededRandom(index * 41) * 40);
+        // Long titles or random selection get normal width (75-105px)
+        width = Math.round(75 + seededRandom(index * 41) * 30);
     }
 
     // Spine style variant (0-5 for different visual treatments)
