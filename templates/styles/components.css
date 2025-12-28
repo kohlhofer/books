@@ -438,11 +438,12 @@
 .book-spine-content {
     flex: 1;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: space-between;
     padding: 10px 4px;
-    writing-mode: vertical-lr;
+    writing-mode: vertical-rl;
     text-orientation: mixed;
+    transform: rotate(180deg);
     overflow: hidden;
 }
 
@@ -454,8 +455,7 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    max-height: calc(100% - 40px);
+    word-break: break-word;
 }
 
 .book-spine-author {
@@ -465,6 +465,7 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    flex-shrink: 0;
 }
 
 /* ========================================

@@ -239,11 +239,12 @@
   .book-spine-content {
     flex: 1;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: space-between;
     padding: 18px 9px;
-    writing-mode: vertical-lr;
+    writing-mode: vertical-rl;
     text-orientation: mixed;
+    transform: rotate(180deg);
     overflow: hidden;
   }
 
@@ -254,9 +255,7 @@
     line-height: 1.2;
     text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
     word-break: break-word;
     hyphens: auto;
   }
