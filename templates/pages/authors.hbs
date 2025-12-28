@@ -1,6 +1,6 @@
 <div class="text-center mb-6 sm:mb-8">
     <h1 class="text-xl sm:text-2xl font-semibold text-primary mb-2">Meet the Authors</h1>
-    <p class="text-secondary text-sm sm:text-base">Discover {{authors.length}} storytellers and their works</p>
+    <p class="text-secondary text-sm sm:text-base">{{authors.length}} index cards in the file</p>
 </div>
 
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
@@ -15,20 +15,23 @@
     </div>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6" id="authorsGrid">
-    {{#each authors}}
-    <div class="bg-white rounded-lg p-4 sm:p-6 text-center shadow-card transition-all hover:shadow-card-hover hover:-translate-y-0.5" data-author="{{name}}" data-count="{{count}}">
-        <a href="authors/{{slug}}.html" class="no-underline text-inherit">
-            <div class="mb-3 flex justify-center">
-                <svg class="w-10 h-10 sm:w-12 sm:h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
+<div class="index-card-box">
+    <div class="index-card-grid" id="authorsGrid">
+        {{#each authors}}
+        <a href="authors/{{slug}}.html" class="index-card" data-author="{{name}}" data-count="{{count}}">
+            <div class="index-card-tab"></div>
+            <div class="index-card-content">
+                <div class="index-card-header">
+                    <span class="index-card-name">{{name}}</span>
+                </div>
+                <div class="index-card-rule"></div>
+                <div class="index-card-details">
+                    <span class="index-card-count">{{count}} {{#if (eq count 1)}}book{{else}}books{{/if}}</span>
+                </div>
             </div>
-            <h3 class="text-primary mb-2 text-sm sm:text-base">{{name}}</h3>
-            <p class="text-secondary text-xs sm:text-sm">{{count}} books</p>
         </a>
+        {{/each}}
     </div>
-    {{/each}}
 </div>
 
 <script>
@@ -37,73 +40,58 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const sortBy = document.getElementById('sortBy');
     const authorsGrid = document.getElementById('authorsGrid');
-    
+
     function filterAndSortAuthors() {
         const searchTerm = searchInput.value.toLowerCase();
         const sortValue = sortBy.value;
         const authorItems = Array.from(document.querySelectorAll('[data-author]'));
-        
+
         // Filter authors
         authorItems.forEach(item => {
-            const authorName = item.querySelector('h3').textContent.toLowerCase();
+            const authorName = item.querySelector('.index-card-name').textContent.toLowerCase();
             const shouldShow = authorName.includes(searchTerm);
-            item.style.display = shouldShow ? 'block' : 'none';
+            item.style.display = shouldShow ? 'flex' : 'none';
         });
-        
+
         // Sort authors
         const visibleItems = authorItems.filter(item => item.style.display !== 'none');
         visibleItems.sort((a, b) => {
             let aValue, bValue;
-            
+
             switch (sortValue) {
                 case 'name':
-                    // Sort by last name, then first name
-                    const aName = a.querySelector('h3').textContent;
-                    const bName = b.querySelector('h3').textContent;
-                    
+                    const aName = a.querySelector('.index-card-name').textContent;
+                    const bName = b.querySelector('.index-card-name').textContent;
+
                     const aParts = aName.split(' ');
                     const bParts = bName.split(' ');
-                    
+
                     const aLastName = aParts[aParts.length - 1] || '';
                     const bLastName = bParts[bParts.length - 1] || '';
                     const aFirstName = aParts[0] || '';
                     const bFirstName = bParts[0] || '';
-                    
-                    // First compare by last name
+
                     if (aLastName < bLastName) return -1;
                     if (aLastName > bLastName) return 1;
-                    
-                    // If last names are equal, compare by first name
                     if (aFirstName < bFirstName) return -1;
                     if (aFirstName > bFirstName) return 1;
-                    
                     return 0;
                 case 'count':
                     aValue = parseInt(a.dataset.count);
                     bValue = parseInt(b.dataset.count);
-                    // Sort descending (highest to lowest)
                     if (aValue > bValue) return -1;
                     if (aValue < bValue) return 1;
                     return 0;
                 default:
                     return 0;
             }
-            
-            // Only apply default sorting for name (last name, then first name)
-            if (sortValue === 'name') {
-                // The name sorting logic is already handled above
-                return 0;
-            }
         });
-        
-        // Reorder DOM elements
+
         visibleItems.forEach(item => authorsGrid.appendChild(item));
     }
-    
+
     if (searchInput) searchInput.addEventListener('input', filterAndSortAuthors);
     if (sortBy) sortBy.addEventListener('change', filterAndSortAuthors);
-
-    // Initial render
     filterAndSortAuthors();
 });
 </script>

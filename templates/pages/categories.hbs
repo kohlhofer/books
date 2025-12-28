@@ -1,6 +1,6 @@
 <div class="text-center mb-6 sm:mb-8">
     <h1 class="text-xl sm:text-2xl font-semibold text-primary mb-2">Browse by Category</h1>
-    <p class="text-secondary text-sm sm:text-base">Find your next adventure in {{categories.length}} different worlds</p>
+    <p class="text-secondary text-sm sm:text-base">{{categories.length}} catalog drawers to explore</p>
 </div>
 
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
@@ -15,20 +15,20 @@
     </div>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6" id="categoriesGrid">
-    {{#each categories}}
-    <div class="bg-white rounded-lg p-4 sm:p-6 text-center shadow-card transition-all hover:shadow-card-hover hover:-translate-y-0.5" data-category="{{name}}" data-count="{{count}}">
-        <a href="categories/{{slug}}.html" class="no-underline text-inherit">
-            <div class="mb-3 flex justify-center">
-                <svg class="w-10 h-10 sm:w-12 sm:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: {{categoryText}};">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                </svg>
+<div class="card-catalog">
+    <div class="catalog-grid" id="categoriesGrid">
+        {{#each categories}}
+        <a href="categories/{{slug}}.html" class="catalog-drawer" data-category="{{name}}" data-count="{{count}}">
+            <div class="drawer-face">
+                <div class="drawer-label-holder">
+                    <div class="drawer-label">{{name}}</div>
+                </div>
+                <div class="drawer-pull"></div>
             </div>
-            <h3 class="text-primary mb-2 text-sm sm:text-base">{{name}}</h3>
-            <p class="text-secondary text-xs sm:text-sm">{{count}} books</p>
+            <div class="drawer-count">{{count}} books</div>
         </a>
+        {{/each}}
     </div>
-    {{/each}}
 </div>
 
 <script>
@@ -37,56 +37,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const sortBy = document.getElementById('sortBy');
     const categoriesGrid = document.getElementById('categoriesGrid');
-    
+
     function filterAndSortCategories() {
         const searchTerm = searchInput.value.toLowerCase();
         const sortValue = sortBy.value;
         const categoryItems = Array.from(document.querySelectorAll('[data-category]'));
-        
+
         // Filter categories
         categoryItems.forEach(item => {
-            const categoryName = item.querySelector('h3').textContent.toLowerCase();
+            const categoryName = item.querySelector('.drawer-label').textContent.toLowerCase();
             const shouldShow = categoryName.includes(searchTerm);
-            item.style.display = shouldShow ? 'block' : 'none';
+            item.style.display = shouldShow ? 'flex' : 'none';
         });
-        
+
         // Sort categories
         const visibleItems = categoryItems.filter(item => item.style.display !== 'none');
         visibleItems.sort((a, b) => {
             let aValue, bValue;
-            
+
             switch (sortValue) {
                 case 'name':
-                    aValue = a.querySelector('h3').textContent.toLowerCase();
-                    bValue = b.querySelector('h3').textContent.toLowerCase();
+                    aValue = a.querySelector('.drawer-label').textContent.toLowerCase();
+                    bValue = b.querySelector('.drawer-label').textContent.toLowerCase();
                     break;
                 case 'count':
                     aValue = parseInt(a.dataset.count);
                     bValue = parseInt(b.dataset.count);
-                    // Sort descending (highest to lowest)
                     if (aValue > bValue) return -1;
                     if (aValue < bValue) return 1;
                     return 0;
                 default:
                     return 0;
             }
-            
-            // Only apply default sorting for name (alphabetical)
+
             if (sortValue === 'name') {
                 if (aValue < bValue) return -1;
                 if (aValue > bValue) return 1;
                 return 0;
             }
         });
-        
-        // Reorder DOM elements
+
         visibleItems.forEach(item => categoriesGrid.appendChild(item));
     }
-    
+
     if (searchInput) searchInput.addEventListener('input', filterAndSortCategories);
     if (sortBy) sortBy.addEventListener('change', filterAndSortCategories);
-
-    // Initial render
     filterAndSortCategories();
 });
 </script>
