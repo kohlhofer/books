@@ -93,14 +93,14 @@ function calculateSpineDimensions(title, index) {
     const widthRandom = seededRandom(index * 31);
     let width;
     if (titleLength <= 15 && widthRandom < 0.4) {
-        // Short titles can be thin (54-70px)
-        width = Math.round(54 + seededRandom(index * 41) * 16);
+        // Short titles can be thin (65-82px)
+        width = Math.round(65 + seededRandom(index * 41) * 17);
     } else if (titleLength <= 25 && widthRandom < 0.3) {
-        // Medium titles can be slim (70-90px)
-        width = Math.round(70 + seededRandom(index * 41) * 20);
+        // Medium titles can be slim (80-100px)
+        width = Math.round(80 + seededRandom(index * 41) * 20);
     } else {
-        // Long titles or random selection get normal width (85-128px)
-        width = Math.round(85 + seededRandom(index * 41) * 43);
+        // Long titles or random selection get normal width (95-135px)
+        width = Math.round(95 + seededRandom(index * 41) * 40);
     }
 
     // Spine style variant (0-5 for different visual treatments)
@@ -109,12 +109,8 @@ function calculateSpineDimensions(title, index) {
     // Font variant (0-3 for different font families)
     const fontVariant = Math.floor(seededRandom(index * 61) * 4);
 
-    // Publisher logo (only ~25% of books have one, and only wider books)
-    let publisherLogo = null;
-    if (width >= 70 && seededRandom(index * 79) < 0.25) {
-        const logoIndex = Math.floor(seededRandom(index * 83) * publisherLogos.length);
-        publisherLogo = publisherLogos[logoIndex];
-    }
+    // Publisher logo disabled for cleaner look
+    const publisherLogo = null;
 
     return { height, width, styleVariant, fontVariant, publisherLogo };
 }
