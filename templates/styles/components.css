@@ -438,12 +438,11 @@
 .book-spine-content {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     justify-content: space-between;
     padding: 10px 4px;
-    writing-mode: vertical-rl;
+    writing-mode: vertical-lr;
     text-orientation: mixed;
-    transform: rotate(180deg);
     overflow: hidden;
 }
 
