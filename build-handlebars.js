@@ -784,7 +784,45 @@ async function build() {
     // Generate JavaScript
     const jsContent = generateJavaScript();
     fs.writeFileSync('./dist/script.js', jsContent);
-    
+
+    // TEMPORARY — delete once the old pages have left the index. See SEO.md.
+    //
+    // Every page below carries noindex. Listing them anyway is deliberate: a
+    // sitemap with a fresh lastmod is the only lever we have to pull Google
+    // back for a recrawl, and it can't act on the noindex until it recrawls.
+    // Expect Search Console to report "Submitted URL marked noindex" for these
+    // — that warning is the mechanism working, not a fault to fix.
+    if (isProduction) {
+        const lastmod = new Date().toISOString().slice(0, 10);
+        const paths = [
+            '/',
+            '/categories.html',
+            '/authors.html',
+            ...sortedCategories.map(c => `/categories/${generateSlug(c.name)}.html`),
+            ...Object.keys(authorCounts).map(a => `/authors/${generateSlug(a)}.html`)
+        ];
+        // Distinct names can slug to the same file ("Self-help" vs "Self-Help"),
+        // in which case one page overwrites the other and only one file exists.
+        // Dedupe so the sitemap matches what's on disk, and say so out loud —
+        // a collision means a page of books silently went missing.
+        const urls = [...new Set(paths)];
+        if (urls.length !== paths.length) {
+            const seen = new Set();
+            const collided = paths.filter(p => (seen.has(p) ? true : (seen.add(p), false)));
+            console.warn(`WARNING: ${paths.length - urls.length} slug collision(s) — these pages overwrite each other:`);
+            collided.forEach(p => console.warn(`  ${p}`));
+        }
+        const sitemap =
+            '<?xml version="1.0" encoding="UTF-8"?>\n' +
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+            urls
+                .map(u => `  <url>\n    <loc>${SITE_URL}${u}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>\n`)
+                .join('') +
+            '</urlset>\n';
+        fs.writeFileSync('./dist/sitemap.xml', sitemap);
+        console.log(`Wrote dist/sitemap.xml with ${urls.length} URLs (recrawl aid — temporary)`);
+    }
+
     console.log('Build completed successfully!');
     console.log('Generated files in ./dist/');
 }
