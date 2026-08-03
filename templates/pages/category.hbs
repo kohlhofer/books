@@ -5,7 +5,7 @@
         </svg>
     </div>
     <h1 class="text-xl sm:text-2xl font-semibold text-primary mb-2">{{categoryName}}</h1>
-    <p class="text-secondary text-base sm:text-lg">{{books.length}} books in this category</p>
+    <p class="text-secondary text-base sm:text-lg">{{books.length}} book{{#unless (eq books.length 1)}}s{{/unless}} in this category</p>
 </div>
 
 <div class="bookshelf-container">
