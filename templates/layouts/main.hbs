@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}} - A. Kohlhofer's Bookshelf</title>
+    {{#unless indexable}}
+    <meta name="robots" content="noindex, follow">
+    {{/unless}}
+    {{#if description}}
+    <meta name="description" content="{{description}}">
+    {{/if}}
+    {{#if canonicalUrl}}
+    <link rel="canonical" href="{{canonicalUrl}}">
+    {{/if}}
     <link rel="stylesheet" href="{{assetPath}}style.css">
 </head>
 <body class="bg-gray-50 min-h-screen">

@@ -6,6 +6,12 @@ const Handlebars = require('handlebars');
 const isProduction = process.env.NODE_ENV === 'production' || process.env.BUILD_ENV === 'production';
 const assetPath = isProduction ? '/books/' : './';
 
+// Canonical origin for this deployment. Only the landing page is meant to be
+// indexed; the 500+ generated author/category pages are thin by nature and get
+// noindex so they don't dilute the quality signal for kohlhofer.com as a whole.
+const SITE_URL = 'https://kohlhofer.com/books';
+const canonical = pathname => (isProduction ? `${SITE_URL}${pathname}` : null);
+
 console.log(`Building for ${isProduction ? 'production' : 'development'} with asset path: ${assetPath}`);
 
 // Register partials
@@ -612,7 +618,10 @@ async function build() {
         locations: locations,
         isIndex: true,
         basePath: './',
-        assetPath: assetPath
+        assetPath: assetPath,
+        indexable: true,
+        canonicalUrl: canonical('/'),
+        description: `A browsable shelf of ${books.length} books from A. Kohlhofer's personal library — physical, Kindle and Audible, searchable by title, author and category.`
     };
     
     const indexContent = mainLayout({
@@ -643,9 +652,10 @@ async function build() {
         }),
         isCategories: true,
         basePath: './',
-        assetPath: assetPath
+        assetPath: assetPath,
+        canonicalUrl: canonical('/categories.html')
     };
-    
+
     const categoriesContent = mainLayout({
         ...categoriesData,
         body: categoriesTemplate(categoriesData)
@@ -668,9 +678,10 @@ async function build() {
         })).sort((a, b) => b.count - a.count),
         isAuthors: true,
         basePath: './',
-        assetPath: assetPath
+        assetPath: assetPath,
+        canonicalUrl: canonical('/authors.html')
     };
-    
+
     const authorsContent = mainLayout({
         ...authorsData,
         body: authorsTemplate(authorsData)
@@ -698,6 +709,7 @@ async function build() {
         }));
         const categoryShelves = organizeIntoShelves(categoryBooks, 20);
         const categoryColors = getCategoryColors(category.name);
+        const categorySlug = generateSlug(category.name);
         const categoryData = {
             title: category.name,
             categoryName: category.name,
@@ -706,6 +718,7 @@ async function build() {
             isCategories: true,
             basePath: '../',
             assetPath: isProduction ? '/books/' : '../',
+            canonicalUrl: canonical(`/categories/${categorySlug}.html`),
             // Pass category colors to the template
             categoryBg: categoryColors.bg,
             categoryText: categoryColors.text,
@@ -721,7 +734,6 @@ async function build() {
             includeScripts: false
         });
         
-        const categorySlug = generateSlug(category.name);
         fs.writeFileSync(`./dist/categories/${categorySlug}.html`, categoryContent);
     }
     
@@ -744,6 +756,7 @@ async function build() {
             categoryDarkText: book.categoryDarkText
         }));
         const authorShelves = organizeIntoShelves(authorBooks, 5); // 5 covers per shelf
+        const authorSlug = generateSlug(author);
         const authorData = {
             title: author,
             authorName: author,
@@ -751,7 +764,8 @@ async function build() {
             shelves: authorShelves,
             isAuthors: true,
             basePath: '../',
-            assetPath: isProduction ? '/books/' : '../'
+            assetPath: isProduction ? '/books/' : '../',
+            canonicalUrl: canonical(`/authors/${authorSlug}.html`)
         };
         
         const authorContent = mainLayout({
@@ -760,7 +774,6 @@ async function build() {
             includeScripts: false
         });
         
-        const authorSlug = generateSlug(author);
         fs.writeFileSync(`./dist/authors/${authorSlug}.html`, authorContent);
     }
     
